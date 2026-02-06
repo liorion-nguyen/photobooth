@@ -11,6 +11,7 @@ import LayoutProgress from "@/components/Layouts/LayoutProgress";
 import LayoutSelector from "@/components/Layouts/LayoutSelector";
 import Logo from "@/components/Logo";
 import PreviewImage from "@/components/Preview/PreviewImage";
+import ShareModal from "@/components/Share/ShareModal";
 import Button from "@/components/UI/Button";
 import Modal from "@/components/UI/Modal";
 import { useAuth } from "@/contexts/AuthContext";
@@ -23,7 +24,7 @@ import type { CaptureResult, FilterType, UploadProgress } from "@/types/photo";
 import { downloadImage } from "@/utils/downloadImage";
 import { exportLayoutAsImage } from "@/utils/layoutCanvas";
 import { AnimatePresence, motion } from "framer-motion";
-import { AlertTriangle, LogIn, UserPlus } from "lucide-react";
+import { AlertTriangle, LogIn, Share2, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
@@ -44,6 +45,8 @@ export default function PhotoboothPage() {
   const [selectedFilter, setSelectedFilter] = useState<FilterType>("none");
   const [isMirror, setIsMirror] = useState(true);
   const [uploadProgress, setUploadProgress] = useState<UploadProgress | null>(null);
+  const [uploadedPhotoId, setUploadedPhotoId] = useState<string | null>(null);
+  const [showShareModal, setShowShareModal] = useState(false);
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
   const [showPermissionModal, setShowPermissionModal] = useState(false);
   const [captureSettings, setCaptureSettings] = useState<CaptureSettings>({
@@ -273,6 +276,11 @@ export default function PhotoboothPage() {
           throw new Error(uploadResult.error || "Upload thất bại");
         }
 
+        // Save photo ID for sharing
+        if (uploadResult.id) {
+          setUploadedPhotoId(uploadResult.id);
+        }
+
         // Download ảnh về máy
         setUploadProgress({ loaded: 90, total: 100, percentage: 90 });
         const frameName = selectedFrame !== "none" ? selectedFrame : "no-frame";
@@ -282,12 +290,9 @@ export default function PhotoboothPage() {
         setUploadProgress({ loaded: 100, total: 100, percentage: 100 });
         await new Promise(resolve => setTimeout(resolve, 500));
         
-        // Reset và quay về layout select
-        setViewMode("layout-select");
-        resetLayout();
-        setPhotoMode(null);
-        setSelectedFrame("none");
-        setUploadProgress(null);
+        // Giữ lại view mode để hiển thị nút share
+        // Không reset ngay, để user có thể share ảnh
+        setUploadProgress({ loaded: 100, total: 100, percentage: 100 });
       } catch (error) {
         alert(`Lưu ảnh thất bại: ${error instanceof Error ? error.message : "Unknown error"}`);
         setUploadProgress(null);
@@ -311,6 +316,11 @@ export default function PhotoboothPage() {
           throw new Error(uploadResult.error || "Upload thất bại");
         }
 
+        // Save photo ID for sharing
+        if (uploadResult.id) {
+          setUploadedPhotoId(uploadResult.id);
+        }
+
         // Download ảnh về máy
         setUploadProgress({ loaded: 80, total: 100, percentage: 80 });
         downloadImage(capturedImage.blob, "photobooth-single");
@@ -318,12 +328,9 @@ export default function PhotoboothPage() {
         setUploadProgress({ loaded: 100, total: 100, percentage: 100 });
         await new Promise(resolve => setTimeout(resolve, 500));
         
-        // Reset
-        setViewMode("layout-select");
-        setCapturedImage(null);
-        setSelectedFilter("none");
-        setPhotoMode(null);
-        setUploadProgress(null);
+        // Giữ lại view mode để hiển thị nút share
+        // Không reset ngay, để user có thể share ảnh
+        setUploadProgress({ loaded: 100, total: 100, percentage: 100 });
       } catch (error) {
         alert(`Lưu ảnh thất bại: ${error instanceof Error ? error.message : "Unknown error"}`);
         setUploadProgress(null);
@@ -344,6 +351,10 @@ export default function PhotoboothPage() {
     if (capturedImage) {
       setCapturedImage(null);
     }
+    // Reset upload state
+    setUploadProgress(null);
+    setUploadedPhotoId(null);
+    setShowShareModal(false);
     // Không stop camera, chỉ ẩn đi
     // stopCamera();
   }, [layoutState, capturedImage, resetLayout]);
@@ -714,7 +725,51 @@ export default function PhotoboothPage() {
                     </p>
                   </div>
                 )}
+
+                {uploadProgress && uploadProgress.percentage === 100 && uploadedPhotoId && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-4"
+                  >
+                    <Button
+                      onClick={() => setShowShareModal(true)}
+                      className="w-full bg-purple-600 hover:bg-purple-700 text-white flex items-center justify-center gap-2"
+                    >
+                      <Share2 className="w-4 h-4" />
+                      Chia sẻ ảnh
+                    </Button>
+                  </motion.div>
+                )}
+
+                {uploadProgress && uploadProgress.percentage === 100 && uploadedPhotoId && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-4"
+                  >
+                    <Button
+                      onClick={() => setShowShareModal(true)}
+                      className="w-full bg-purple-600 hover:bg-purple-700 text-white flex items-center justify-center gap-2"
+                    >
+                      <Share2 className="w-4 h-4" />
+                      Chia sẻ ảnh
+                    </Button>
+                  </motion.div>
+                )}
               </motion.div>
+            )}
+
+            {/* Share Modal */}
+            {uploadedPhotoId && (
+              <ShareModal
+                isOpen={showShareModal}
+                onClose={() => {
+                  setShowShareModal(false);
+                  // Không reset uploadedPhotoId ngay, để user có thể mở lại
+                }}
+                photoId={uploadedPhotoId}
+              />
             )}
 
             {viewMode === "layout-preview" && layoutState && (
@@ -799,6 +854,36 @@ export default function PhotoboothPage() {
                       Đang lưu: {uploadProgress.percentage}%
                     </p>
                   </div>
+                )}
+
+                {uploadProgress && uploadProgress.percentage === 100 && uploadedPhotoId && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-4"
+                  >
+                    <Button
+                      onClick={() => setShowShareModal(true)}
+                      className="w-full bg-purple-600 hover:bg-purple-700 text-white flex items-center justify-center gap-2"
+                    >
+                      <Share2 className="w-4 h-4" />
+                      Chia sẻ ảnh
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setViewMode("layout-select");
+                        resetLayout();
+                        setPhotoMode(null);
+                        setSelectedFrame("none");
+                        setUploadProgress(null);
+                        setUploadedPhotoId(null);
+                      }}
+                      variant="secondary"
+                      className="w-full mt-2"
+                    >
+                      Quay lại chọn layout
+                    </Button>
+                  </motion.div>
                 )}
               </motion.div>
             )}

@@ -1,14 +1,53 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
-import { Check, Camera, User } from "lucide-react";
+import { getUserPhotos, deletePhoto, type Photo } from "@/services/photos.service";
+import { Check, Camera, User, Trash2, Loader2, Image as ImageIcon } from "lucide-react";
 
 export default function ProfilePage() {
   const { user, loading } = useAuth();
+  const router = useRouter();
   const [avatarError, setAvatarError] = useState(false);
+  const [photos, setPhotos] = useState<Photo[]>([]);
+  const [photosLoading, setPhotosLoading] = useState(true);
+  const [deletingPhotoId, setDeletingPhotoId] = useState<string | null>(null);
+
+  const loadPhotos = useCallback(async () => {
+    if (!user) return;
+    
+    try {
+      setPhotosLoading(true);
+      const userPhotos = await getUserPhotos();
+      setPhotos(userPhotos);
+    } catch (error) {
+      console.error("Failed to load photos:", error);
+      setPhotos([]);
+    } finally {
+      setPhotosLoading(false);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user && !loading) {
+      loadPhotos();
+    }
+  }, [user, loading, loadPhotos]);
+
+  // Refresh photos when page becomes visible (user might have uploaded new photos)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible" && user && !loading) {
+        loadPhotos();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, [user, loading, loadPhotos]);
 
   if (loading) {
     return (
@@ -44,6 +83,22 @@ export default function ProfilePage() {
       </div>
     );
   }
+
+  const handleDeletePhoto = async (photoId: string) => {
+    if (!confirm("Bạn có chắc muốn xóa ảnh này?")) {
+      return;
+    }
+
+    try {
+      setDeletingPhotoId(photoId);
+      await deletePhoto(photoId);
+      setPhotos(photos.filter((p) => p.id !== photoId));
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "Không thể xóa ảnh");
+    } finally {
+      setDeletingPhotoId(null);
+    }
+  };
 
   const initial = user.name
     ? user.name.charAt(0).toUpperCase()
@@ -120,23 +175,104 @@ export default function ProfilePage() {
           transition={{ delay: 0.15, duration: 0.4 }}
           className="mt-8"
         >
-          <h2 className="text-lg font-semibold text-slate-800 mb-4">
-            Ảnh của tôi
-          </h2>
-          <div className="rounded-2xl bg-white/90 backdrop-blur-sm shadow-xl shadow-slate-200/50 border border-slate-200/60 p-10 sm:p-12 text-center">
-            <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
-              <Camera className="w-8 h-8 text-slate-400" />
-            </div>
-            <p className="text-slate-600 mb-6">
-              Bạn chưa có ảnh nào trong hồ sơ.
-            </p>
-            <Link
-              href="/photobooth"
-              className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/30"
-            >
-              Chụp ảnh ngay
-            </Link>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-slate-800">
+              Ảnh của tôi {photos.length > 0 && `(${photos.length})`}
+            </h2>
+            {photos.length > 0 && (
+              <button
+                onClick={loadPhotos}
+                className="text-sm text-indigo-600 hover:text-indigo-700 font-medium"
+              >
+                Làm mới
+              </button>
+            )}
           </div>
+
+          {photosLoading ? (
+            <div className="rounded-2xl bg-white/90 backdrop-blur-sm shadow-xl shadow-slate-200/50 border border-slate-200/60 p-12 text-center">
+              <Loader2 className="w-8 h-8 animate-spin text-indigo-600 mx-auto mb-4" />
+              <p className="text-slate-600">Đang tải ảnh...</p>
+            </div>
+          ) : photos.length === 0 ? (
+            <div className="rounded-2xl bg-white/90 backdrop-blur-sm shadow-xl shadow-slate-200/50 border border-slate-200/60 p-10 sm:p-12 text-center">
+              <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
+                <Camera className="w-8 h-8 text-slate-400" />
+              </div>
+              <p className="text-slate-600 mb-6">
+                Bạn chưa có ảnh nào trong hồ sơ.
+              </p>
+              <Link
+                href="/photobooth"
+                className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/30"
+              >
+                Chụp ảnh ngay
+              </Link>
+            </div>
+          ) : (
+            <div className="rounded-2xl bg-white/90 backdrop-blur-sm shadow-xl shadow-slate-200/50 border border-slate-200/60 p-4 sm:p-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                <AnimatePresence>
+                  {photos.map((photo) => (
+                    <motion.div
+                      key={photo.id}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      className="relative group aspect-[4/3] rounded-lg overflow-hidden bg-slate-100"
+                    >
+                      <img
+                        src={photo.url}
+                        alt="Photo"
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => window.open(photo.url, "_blank")}
+                            className="p-2 bg-white/90 rounded-lg hover:bg-white transition-colors"
+                            title="Xem ảnh"
+                          >
+                            <ImageIcon className="w-5 h-5 text-slate-700" />
+                          </button>
+                          <button
+                            onClick={() => handleDeletePhoto(photo.id)}
+                            disabled={deletingPhotoId === photo.id}
+                            className="p-2 bg-red-500/90 rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50"
+                            title="Xóa ảnh"
+                          >
+                            {deletingPhotoId === photo.id ? (
+                              <Loader2 className="w-5 h-5 text-white animate-spin" />
+                            ) : (
+                              <Trash2 className="w-5 h-5 text-white" />
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+                        <p className="text-white text-xs">
+                          {new Date(photo.createdAt).toLocaleDateString("vi-VN", {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          })}
+                        </p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
+              <div className="mt-6 text-center">
+                <Link
+                  href="/photobooth"
+                  className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/30"
+                >
+                  <Camera className="w-4 h-4 mr-2" />
+                  Chụp thêm ảnh
+                </Link>
+              </div>
+            </div>
+          )}
         </motion.section>
       </div>
     </div>

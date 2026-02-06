@@ -55,14 +55,27 @@ export default function ShareModal({ isOpen, onClose, photoId }: ShareModalProps
     setLoading(true);
     setError(null);
     try {
+      // Get current origin for share URL
+      const currentOrigin = typeof window !== 'undefined' ? window.location.origin : '';
+      
       // Try to get existing share link first
       const existing = await getShareLink(photoId);
       if (existing) {
-        setShareLink(existing);
+        // Always use current origin for share URL (more reliable)
+        const shareLinkData: ShareLinkResponse = {
+          ...existing,
+          shareUrl: `${currentOrigin}/share/${existing.token}`,
+        };
+        setShareLink(shareLinkData);
       } else {
         // Create new share link
         const newShare = await createShareLink(photoId);
-        setShareLink(newShare);
+        // Always use current origin for share URL
+        const shareLinkData: ShareLinkResponse = {
+          ...newShare,
+          shareUrl: `${currentOrigin}/share/${newShare.token}`,
+        };
+        setShareLink(shareLinkData);
       }
     } catch (err) {
       console.error("Share link error:", err);

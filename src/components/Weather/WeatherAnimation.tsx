@@ -82,6 +82,8 @@ export default function WeatherAnimation() {
     let lastTime = Date.now();
 
     function animate() {
+      if (!ctx) return;
+      
       const currentTime = Date.now();
       const deltaTime = (currentTime - lastTime) / 16; // Normalize to 60fps
       lastTime = currentTime;

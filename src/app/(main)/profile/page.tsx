@@ -69,7 +69,7 @@ export default function ProfilePage() {
                 <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden bg-gradient-to-br from-indigo-500 to-violet-600 p-1 shadow-lg shadow-indigo-500/20 ring-2 ring-white">
                   {showAvatar ? (
                     <img
-                      src={user.avatarUrl}
+                      src={user.avatarUrl ?? undefined}
                       alt=""
                       referrerPolicy="no-referrer"
                       onError={() => setAvatarError(true)}

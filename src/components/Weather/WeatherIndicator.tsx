@@ -8,7 +8,7 @@ export default function WeatherIndicator() {
 
   if (loading || !weather) return null;
 
-  const icons = {
+  const icons: Record<string, typeof Sun> = {
     Clear: Sun,
     Clouds: Cloud,
     Rain: CloudRain,
@@ -17,6 +17,7 @@ export default function WeatherIndicator() {
     Wind: Wind,
     Fog: Eye,
     Mist: Eye,
+    Drizzle: CloudRain,
   };
 
   const IconComponent = icons[weatherType] || Sun;

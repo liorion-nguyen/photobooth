@@ -390,7 +390,7 @@ export default function AdminPage() {
                             <div className="flex items-center gap-3">
                               {user.avatarUrl ? (
                                 <img
-                                  src={user.avatarUrl}
+                                  src={user.avatarUrl ?? undefined}
                                   alt=""
                                   className="w-10 h-10 rounded-full object-cover"
                                   referrerPolicy="no-referrer"

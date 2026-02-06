@@ -14,6 +14,7 @@ function UserMenu() {
   const { user, logout } = useAuth();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -36,7 +37,6 @@ function UserMenu() {
     ? user.name.charAt(0).toUpperCase()
     : user.email.charAt(0).toUpperCase();
 
-  const [avatarError, setAvatarError] = useState(false);
   const showAvatar = user.avatarUrl && !avatarError;
 
   return (
@@ -51,7 +51,7 @@ function UserMenu() {
       >
         {showAvatar ? (
           <img
-            src={user.avatarUrl!}
+            src={user.avatarUrl ?? undefined}
             alt=""
             referrerPolicy="no-referrer"
             onError={() => setAvatarError(true)}

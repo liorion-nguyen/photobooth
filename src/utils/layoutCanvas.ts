@@ -1,7 +1,10 @@
 import type { LayoutState } from "@/types/layout";
+import type { FrameType } from "@/components/Frames/FrameSelector";
+import { applyFrameToCanvas } from "./frameUtils";
 
 export async function exportLayoutAsImage(
-  layoutState: LayoutState
+  layoutState: LayoutState,
+  frameType: FrameType = "none"
 ): Promise<Blob> {
   const { config, slots } = layoutState;
 
@@ -12,25 +15,33 @@ export async function exportLayoutAsImage(
     throw new Error("Cannot get canvas context");
   }
 
-  // Kích thước canvas (1080px width cho chất lượng tốt)
-  const canvasWidth = 1080;
-  const cellWidth = canvasWidth / config.cols;
+  // Kích thước canvas (720px width cho preview nhỏ gọn hơn, vẫn đảm bảo chất lượng)
+  const baseWidth = 720;
+  const cellWidth = baseWidth / config.cols;
   const cellHeight = cellWidth; // Square cells
-  const canvasHeight = cellHeight * config.rows;
+  const baseHeight = cellHeight * config.rows;
+
+  // Tính toán kích thước với frame
+  const framePadding = frameType !== "none" ? 40 : 0; // Padding cho frame
+  const canvasWidth = baseWidth + framePadding * 2;
+  const canvasHeight = baseHeight + framePadding * 2;
 
   canvas.width = canvasWidth;
   canvas.height = canvasHeight;
 
-  // Vẽ background trắng
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+  // Áp dụng frame trước
+  applyFrameToCanvas(ctx, canvasWidth, canvasHeight, frameType);
 
-  // Vẽ từng ảnh vào layout
+  // Vẽ background trắng cho layout (với padding cho frame)
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(framePadding, framePadding, baseWidth, baseHeight);
+
+  // Vẽ từng ảnh vào layout (với offset cho frame)
   for (const slot of slots) {
     if (!slot.image) continue;
 
-    const x = slot.col * cellWidth;
-    const y = slot.row * cellHeight;
+    const x = framePadding + slot.col * cellWidth;
+    const y = framePadding + slot.row * cellHeight;
 
     // Load image
     const img = new Image();
@@ -40,7 +51,7 @@ export async function exportLayoutAsImage(
       img.src = slot.image!;
     });
 
-    // Vẽ ảnh vào cell
+    // Vẽ ảnh fill đầy cell (object-fit: cover) - ảnh đã được crop đúng aspect ratio rồi
     ctx.drawImage(img, x, y, cellWidth, cellHeight);
 
     // Vẽ border giữa các cell

@@ -1,20 +1,69 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+
+import type { FilterType } from "@/types/photo";
+import { getFilterCSS } from "@/utils/filterCSS";
 
 interface CameraViewProps {
   videoRef: React.RefObject<HTMLVideoElement>;
   isStreaming: boolean;
   mirror?: boolean;
+  onRestartCamera?: () => void;
+  filter?: FilterType;
 }
 
 export default function CameraView({
   videoRef,
   isStreaming,
   mirror = false,
+  onRestartCamera,
+  filter = "none",
 }: CameraViewProps) {
   const [videoReady, setVideoReady] = useState(false);
+  const videoReadyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Reset videoReady khi isStreaming thay đổi
+  useEffect(() => {
+    if (!isStreaming) {
+      setVideoReady(false);
+      if (videoReadyTimeoutRef.current) {
+        clearTimeout(videoReadyTimeoutRef.current);
+        videoReadyTimeoutRef.current = null;
+      }
+    }
+  }, [isStreaming]);
+
+  // Monitor video ready state và tự động restart nếu video không ready sau một thời gian
+  useEffect(() => {
+    if (!isStreaming || !onRestartCamera) return;
+
+    // Clear timeout cũ nếu có
+    if (videoReadyTimeoutRef.current) {
+      clearTimeout(videoReadyTimeoutRef.current);
+    }
+
+    // Nếu video không ready sau 5 giây, restart camera
+    videoReadyTimeoutRef.current = setTimeout(() => {
+      const video = videoRef.current;
+      if (
+        video &&
+        isStreaming &&
+        !videoReady &&
+        (!video.srcObject || video.readyState < 2) // readyState < 2 = không có data
+      ) {
+        console.warn("CameraView: Video not ready after timeout, restarting camera...");
+        onRestartCamera();
+      }
+    }, 5000);
+
+    return () => {
+      if (videoReadyTimeoutRef.current) {
+        clearTimeout(videoReadyTimeoutRef.current);
+        videoReadyTimeoutRef.current = null;
+      }
+    };
+  }, [isStreaming, videoReady, onRestartCamera, videoRef]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -35,10 +84,7 @@ export default function CameraView({
         videoWidth: video.videoWidth,
         videoHeight: video.videoHeight,
       });
-      setVideoReady(true);
-      video.play().catch((err) => {
-        console.error("Error playing video:", err);
-      });
+      // Không cần gọi play() vì video có autoPlay attribute
     };
 
     const handlePlay = () => {
@@ -65,13 +111,8 @@ export default function CameraView({
       setVideoReady(true);
     });
 
-    // Try to play if stream is already set
-    if (isStreaming && video.srcObject) {
-      console.log("CameraView: Attempting to play video");
-      video.play().catch((err) => {
-        console.error("CameraView: Error playing video:", err);
-      });
-    }
+    // Không cần gọi play() vì video có autoPlay attribute
+    // Video sẽ tự động play khi srcObject được set
 
     return () => {
       video.removeEventListener("loadedmetadata", handleLoadedMetadata);
@@ -82,7 +123,7 @@ export default function CameraView({
   }, [videoRef, isStreaming]);
 
   return (
-    <div className="relative w-full bg-black rounded-lg overflow-hidden" style={{ minHeight: "500px", aspectRatio: "4/3" }}>
+    <div className="relative w-full h-full bg-black rounded-lg overflow-hidden">
       <video
         ref={videoRef}
         autoPlay
@@ -91,10 +132,11 @@ export default function CameraView({
         className={`w-full h-full object-cover ${mirror ? "scale-x-[-1]" : ""}`}
         style={{ 
           opacity: videoReady && isStreaming ? 1 : 0,
-          transition: "opacity 0.3s",
+          transition: "opacity 0.3s, filter 0.3s",
           display: "block",
           width: "100%",
           height: "100%",
+          filter: getFilterCSS(filter),
         }}
       />
       {(!isStreaming || !videoReady) && (

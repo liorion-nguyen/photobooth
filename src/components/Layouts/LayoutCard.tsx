@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useRef, useEffect, useState } from "react";
 import type { LayoutConfig } from "@/types/layout";
 
 interface LayoutCardProps {
@@ -31,45 +30,7 @@ export default function LayoutCard({
   isSelected,
   onClick,
 }: LayoutCardProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const previewRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(1);
-
-  useEffect(() => {
-    const updateScale = () => {
-      if (!containerRef.current || !previewRef.current) return;
-
-      const container = containerRef.current;
-      const preview = previewRef.current;
-
-      const containerHeight = container.clientHeight;
-      const containerWidth = container.clientWidth;
-      
-      const aspectRatio = layout.cols / layout.rows;
-      const previewNaturalHeight = containerWidth / aspectRatio;
-
-      if (previewNaturalHeight > containerHeight) {
-        const scaleFactor = containerHeight / previewNaturalHeight;
-        setScale(scaleFactor);
-      } else {
-        setScale(1);
-      }
-    };
-
-    updateScale();
-    window.addEventListener("resize", updateScale);
-    const observer = new ResizeObserver(updateScale);
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
-
-    return () => {
-      window.removeEventListener("resize", updateScale);
-      observer.disconnect();
-    };
-  }, [layout]);
-
-  // Tạo preview grid với example photos thật
+  // Tạo preview grid với example photos
   const renderPreview = () => {
     const cells = [];
 
@@ -77,13 +38,17 @@ export default function LayoutCard({
       for (let col = 0; col < layout.cols; col++) {
         const index = row * layout.cols + col;
         cells.push(
-          <div
+          <motion.div
             key={index}
-            className="relative overflow-hidden rounded-lg border-2 border-white shadow-lg"
+            className="relative overflow-hidden rounded-lg border-2 border-white shadow-lg w-full"
             style={{
               gridColumn: col + 1,
               gridRow: row + 1,
+              aspectRatio: "4 / 3",
+              width: "100%",
             }}
+            whileHover={{ scale: 1.05, zIndex: 10 }}
+            transition={{ type: "spring", stiffness: 300 }}
           >
             <img
               src={getExamplePhoto(index)}
@@ -91,27 +56,22 @@ export default function LayoutCard({
               className="w-full h-full object-cover"
               loading="lazy"
             />
-            <div className="absolute top-2 right-2 bg-black bg-opacity-60 text-white text-xs font-bold px-2 py-1 rounded-full">
+            <div className="absolute top-1.5 right-1.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg backdrop-blur-sm">
               {index + 1}
             </div>
-          </div>
+          </motion.div>
         );
       }
     }
 
     return (
       <div
-        ref={previewRef}
-        className="grid bg-gradient-to-br from-gray-50 to-gray-100 p-3 rounded-xl shadow-inner"
+        className="grid bg-gradient-to-br from-gray-50 via-white to-gray-100 p-2.5 rounded-xl shadow-inner w-full"
         style={{
           gridTemplateColumns: `repeat(${layout.cols}, 1fr)`,
-          gridTemplateRows: `repeat(${layout.rows}, 1fr)`,
-          gap: "0.5rem",
-          aspectRatio: `${layout.cols} / ${layout.rows}`,
+          gridAutoRows: "auto",
+          gap: "0.35rem",
           width: "100%",
-          height: "auto",
-          transform: `scale(${scale})`,
-          transformOrigin: "center center",
         }}
       >
         {cells}
@@ -122,48 +82,47 @@ export default function LayoutCard({
   return (
     <motion.button
       onClick={onClick}
-      className={`w-full h-full rounded-2xl transition-all overflow-hidden flex flex-col ${
+      className={`w-full rounded-2xl transition-all overflow-hidden flex flex-col group ${
         isSelected
-          ? "border-4 border-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 shadow-2xl ring-4 ring-blue-200"
-          : "border-2 border-gray-200 hover:border-gray-300 bg-white shadow-lg hover:shadow-xl"
+          ? "border-2 border-blue-500 bg-gradient-to-br from-blue-50 via-white to-purple-50 shadow-2xl shadow-blue-500/20 ring-4 ring-blue-200/50"
+          : "border-2 border-gray-200 hover:border-blue-300 bg-white shadow-lg hover:shadow-xl hover:shadow-blue-500/10"
       }`}
-      whileHover={{ scale: isSelected ? 1.01 : 1.02 }}
+      whileHover={{ scale: isSelected ? 1.02 : 1.05, y: isSelected ? 0 : -4 }}
       whileTap={{ scale: 0.98 }}
       animate={{
-        scale: isSelected ? 1.01 : 1,
+        scale: isSelected ? 1.02 : 1,
       }}
     >
-      <div 
-        ref={containerRef}
-        className="flex-1 flex items-center justify-center min-h-0 p-4"
-        style={{ overflow: "hidden" }}
-      >
-        <div 
-          className="w-full"
-          style={{
-            maxHeight: "100%",
-            maxWidth: "100%",
-          }}
-        >
+      {/* Preview Area - Takes most of the space */}
+      <div className="flex items-center justify-center p-2 sm:p-3 md:p-4">
+        <div className="w-full">
           {renderPreview()}
         </div>
       </div>
-      <div className="px-6 pb-4 pt-2 flex-shrink-0">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="font-bold text-lg text-gray-800 mb-1">
+
+      {/* Info Section - Modern Design */}
+      <div className="px-2 sm:px-3 md:px-4 pb-2 sm:pb-3 md:pb-4 pt-2 sm:pt-3 flex-shrink-0 bg-gradient-to-t from-gray-50/50 to-transparent border-t border-gray-100/50">
+        <div className="flex items-center justify-between mb-1.5 sm:mb-2">
+          <div className="flex-1 min-w-0">
+            <div className={`font-bold text-sm sm:text-base truncate mb-0.5 ${
+              isSelected 
+                ? "bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent" 
+                : "text-gray-800 group-hover:text-blue-600"
+            }`}>
               {layout.name}
             </div>
-            <div className="text-sm text-gray-600">{layout.description}</div>
+            <div className="text-xs text-gray-500 truncate">
+              {layout.description}
+            </div>
           </div>
           {isSelected && (
             <motion.div
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
-              className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center shadow-lg"
+              className="ml-2 flex-shrink-0 w-6 h-6 sm:w-7 sm:h-7 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center shadow-lg shadow-blue-500/30"
             >
               <svg
-                className="w-6 h-6 text-white"
+                className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -178,8 +137,15 @@ export default function LayoutCard({
             </motion.div>
           )}
         </div>
-        <div className="mt-2 text-xs text-gray-500 font-medium">
-          {layout.totalSlots} ảnh • Click để chọn
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 sm:py-1 bg-gray-100 rounded-lg">
+            <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span className="text-xs font-semibold text-gray-700">{layout.totalSlots} ảnh</span>
+          </div>
+          <span className="text-xs text-gray-400 hidden sm:inline">•</span>
+          <span className="text-xs text-gray-500 hidden sm:inline">Click để chọn</span>
         </div>
       </div>
     </motion.button>

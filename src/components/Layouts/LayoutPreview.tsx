@@ -18,18 +18,17 @@ export default function LayoutPreview({
 
   return (
     <div
-      className="grid gap-2"
+      className="grid gap-2 w-full max-w-full"
       style={{
         gridTemplateColumns: `repeat(${config.cols}, 1fr)`,
-        gridTemplateRows: `repeat(${config.rows}, 1fr)`,
-        aspectRatio: `${config.cols} / ${config.rows}`,
+        gridAutoRows: "auto",
       }}
     >
       {slots.map((slot, index) => (
         <motion.div
           key={slot.id}
           onClick={() => onSlotClick?.(index)}
-          className={`relative aspect-square rounded-lg overflow-hidden border-2 ${
+          className={`relative aspect-[4/3] rounded-lg overflow-hidden border-2 ${
             slot.captured
               ? "border-green-500"
               : index === layoutState.currentSlotIndex

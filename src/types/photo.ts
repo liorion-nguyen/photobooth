@@ -5,7 +5,15 @@ export type FilterType =
   | "brightness"
   | "contrast"
   | "vintage"
-  | "blur";
+  | "blur"
+  | "skin-whiten"      // Làm trắng da
+  | "skin-smooth"       // Làm mịn da
+  | "beauty"            // Làm đẹp tổng hợp
+  | "vibrant"           // Màu rực rỡ
+  | "warm"              // Ấm áp
+  | "cool"              // Mát mẻ
+  | "cinematic"         // Điện ảnh
+  | "portrait";         // Chân dung
 
 export interface Photo {
   id?: string;

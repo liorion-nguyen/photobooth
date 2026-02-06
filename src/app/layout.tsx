@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Web Photobooth",
-  description: "Capture photos and videos with filters and stickers",
+  title: "Photobooth - Chụp ảnh chuyên nghiệp với filter và layout",
+  description: "Nền tảng chụp ảnh chuyên nghiệp với filter đa dạng và layout linh hoạt. Tạo ra những khoảnh khắc đáng nhớ với công nghệ hiện đại.",
 };
+
+import Providers from "@/components/Providers";
 
 export default function RootLayout({
   children,
@@ -12,8 +14,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="vi">
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

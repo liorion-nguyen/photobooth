@@ -10,6 +10,7 @@ interface CameraControlsProps {
   isMirror?: boolean;
   isStreaming: boolean;
   canSwitchCamera?: boolean;
+  disabled?: boolean;
 }
 
 export default function CameraControls({
@@ -19,6 +20,7 @@ export default function CameraControls({
   isMirror = false,
   isStreaming,
   canSwitchCamera = false,
+  disabled = false,
 }: CameraControlsProps) {
   return (
     <div className="flex items-center justify-center gap-4 p-4">
@@ -48,10 +50,10 @@ export default function CameraControls({
 
       <motion.button
         onClick={onCapture}
-        disabled={!isStreaming}
+        disabled={!isStreaming || disabled}
         className="w-20 h-20 rounded-full bg-white border-4 border-gray-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-        whileHover={isStreaming ? { scale: 1.1 } : {}}
-        whileTap={isStreaming ? { scale: 0.9 } : {}}
+        whileHover={isStreaming && !disabled ? { scale: 1.1 } : {}}
+        whileTap={isStreaming && !disabled ? { scale: 0.9 } : {}}
         aria-label="Chụp ảnh"
       >
         <div className="w-full h-full rounded-full bg-white"></div>

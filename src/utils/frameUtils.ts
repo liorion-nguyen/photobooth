@@ -1,4 +1,5 @@
 import type { FrameType } from "@/components/Frames/FrameSelector";
+import { getCustomFrameImage, type CustomFrameImage } from "@/services/customFrameImage.service";
 
 export interface FrameStyle {
   borderWidth: number;
@@ -70,18 +71,65 @@ export function applyFrameToCanvas(
   ctx: CanvasRenderingContext2D,
   width: number,
   height: number,
-  frameType: FrameType
-): void {
+  frameType: FrameType,
+  customFrameOverride?: CustomFrameImage | null
+): void | Promise<void> {
   if (frameType === "none") return;
+
+  const customFrameImage = customFrameOverride ?? getCustomFrameImage(frameType);
+  if (customFrameImage?.imageData) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      let src = customFrameImage.imageData;
+      // Ảnh từ URL bên ngoài: dùng proxy để tránh CORS / canvas tainted (CDN có thể không gửi CORS)
+      if (typeof src === "string" && /^https?:\/\//i.test(src)) {
+        src = `/api/proxy-image?url=${encodeURIComponent(src)}`;
+      }
+      img.onload = () => {
+        const frameAspectRatio = img.width / img.height;
+        const canvasAspectRatio = width / height;
+        const fitMode = customFrameImage.fitMode ?? "contain";
+        let drawWidth = width;
+        let drawHeight = height;
+        let drawX = 0;
+        let drawY = 0;
+        if (fitMode === "contain") {
+          if (frameAspectRatio > canvasAspectRatio) {
+            drawWidth = width;
+            drawHeight = width / frameAspectRatio;
+            drawY = (height - drawHeight) / 2;
+          } else {
+            drawHeight = height;
+            drawWidth = height * frameAspectRatio;
+            drawX = (width - drawWidth) / 2;
+          }
+        } else {
+          if (frameAspectRatio > canvasAspectRatio) {
+            drawHeight = height;
+            drawWidth = height * frameAspectRatio;
+            drawX = (width - drawWidth) / 2;
+          } else {
+            drawWidth = width;
+            drawHeight = width / frameAspectRatio;
+            drawY = (height - drawHeight) / 2;
+          }
+        }
+        ctx.save();
+        ctx.globalCompositeOperation = "source-over";
+        ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+        ctx.restore();
+        resolve();
+      };
+      img.onerror = () => reject(new Error("Không tải được ảnh khung. Thử khung khác."));
+      img.src = src;
+    });
+  }
 
   const frameStyle = getFrameStyle(frameType);
   const { borderWidth, borderColor, borderStyle, backgroundColor } = frameStyle;
 
-  // Vẽ background nếu có
-  if (backgroundColor) {
-    ctx.fillStyle = backgroundColor;
-    ctx.fillRect(0, 0, width, height);
-  }
+  // KHÔNG vẽ background ở đây vì sẽ che ảnh
+  // Background đã được vẽ trong layoutCanvas.ts trước khi vẽ ảnh
 
   // Vẽ border bằng cách vẽ 4 hình chữ nhật (top, right, bottom, left)
   ctx.fillStyle = borderColor;

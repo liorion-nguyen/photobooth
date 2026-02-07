@@ -5,7 +5,7 @@ import Modal from "@/components/UI/Modal";
 import { useAuth } from "@/contexts/AuthContext";
 import { getToken } from "@/services/auth.service";
 import { AnimatePresence, motion } from "framer-motion";
-import { Camera, Check, Download, Eye, RefreshCw, Trash2, X } from "lucide-react";
+import { Camera, Check, Download, Eye, Frame, RefreshCw, Trash2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -42,7 +42,7 @@ interface PhotoItem {
   };
 }
 
-type TabType = "users" | "photos";
+type TabType = "users" | "photos" | "frames";
 
 export default function AdminPage() {
   const { user, loading: authLoading } = useAuth();
@@ -335,6 +335,19 @@ export default function AdminPage() {
                 />
               )}
             </button>
+            <a
+              href="/admin/frames"
+              className="px-4 py-2 font-medium transition-colors relative text-slate-600 hover:text-slate-800 flex items-center gap-1"
+            >
+              <Frame className="w-4 h-4" />
+              Khung ảnh
+            </a>
+            <a
+              href="/admin/contributions"
+              className="px-4 py-2 font-medium transition-colors relative text-slate-600 hover:text-slate-800 flex items-center gap-1"
+            >
+              Yêu cầu đóng góp
+            </a>
           </div>
         </div>
 

@@ -1,9 +1,9 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { Copy, Check, X, Share2, Calendar } from "lucide-react";
-import { useState, useEffect } from "react";
 import { createShareLink, getShareLink, type ShareLinkResponse } from "@/services/share.service";
+import { motion } from "framer-motion";
+import { Calendar, Check, Copy, Share2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import Modal from "../UI/Modal";
 
 // Simple QR Code generator using canvas (no external library needed)

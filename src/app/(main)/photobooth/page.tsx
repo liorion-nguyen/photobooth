@@ -835,6 +835,7 @@ export default function PhotoboothPage() {
                       <FrameSelector
                         selectedFrame={selectedFrame}
                         onSelect={setSelectedFrame}
+                        currentLayout={layoutState.config.type}
                       />
                     </div>
                   </div>

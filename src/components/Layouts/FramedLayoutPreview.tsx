@@ -19,9 +19,11 @@ export default function FramedLayoutPreview({
 }: FramedLayoutPreviewProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [previewError, setPreviewError] = useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
+    setPreviewError(null);
 
     const generatePreview = async () => {
       if (!layoutState.isComplete) {
@@ -36,11 +38,16 @@ export default function FramedLayoutPreview({
         
         if (isMounted) {
           setPreviewUrl(url);
+          setPreviewError(null);
           setIsLoading(false);
         }
       } catch (error) {
         console.error("Error generating framed preview:", error);
         if (isMounted) {
+          setPreviewUrl(null);
+          setPreviewError(
+            error instanceof Error ? error.message : "Không thể áp dụng khung. Thử khung khác hoặc ảnh từ nguồn hỗ trợ CORS."
+          );
           setIsLoading(false);
         }
       }
@@ -75,14 +82,22 @@ export default function FramedLayoutPreview({
     );
   }
 
-  if (!previewUrl) {
+  if (previewError || !previewUrl) {
     return (
-      <div className="w-full aspect-square bg-gray-100 rounded-lg flex items-center justify-center">
-        <p className="text-gray-500">Không thể tạo preview</p>
+      <div className="w-full aspect-square bg-gray-100 rounded-lg flex flex-col items-center justify-center p-4 text-center">
+        <p className="text-red-600 text-sm font-medium mb-1">Không thể áp dụng khung</p>
+        <p className="text-gray-500 text-xs max-w-xs">
+          {previewError ?? "Không thể tạo preview. Thử chọn khung khác."}
+        </p>
       </div>
     );
   }
 
+  const is1x4 = layoutState.config.type === "1x4";
+  const wrapperClass = is1x4 ? "max-w-xl" : "max-w-md";
+  const imgClass = is1x4
+    ? "w-full h-auto max-h-[min(32rem,70vh)] object-contain rounded-lg shadow-lg"
+    : "w-full h-auto max-h-96 object-contain rounded-lg shadow-lg";
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -90,7 +105,7 @@ export default function FramedLayoutPreview({
       className="w-full flex justify-center"
     >
       <div
-        className={`relative rounded-lg overflow-hidden max-w-md mx-auto ${
+        className={`relative rounded-lg overflow-hidden ${wrapperClass} mx-auto ${
           onSlotClick ? "cursor-pointer" : ""
         }`}
         onClick={() => onSlotClick && onSlotClick(0)}
@@ -98,7 +113,7 @@ export default function FramedLayoutPreview({
         <img
           src={previewUrl}
           alt="Framed layout preview"
-          className="w-full h-auto max-h-96 object-contain rounded-lg shadow-lg"
+          className={imgClass}
         />
       </div>
     </motion.div>

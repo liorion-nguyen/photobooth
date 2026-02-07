@@ -1,11 +1,5 @@
-export type LayoutType = 
-  | "single"      // 1 ảnh
-  | "vertical-4"  // 4 ảnh dọc (1x4)
-  | "horizontal-4" // 4 ảnh ngang (4x1)
-  | "grid-2x2"    // 2x2 grid
-  | "grid-3x3"    // 3x3 grid
-  | "top-bottom"  // 2 ảnh (1 trên, 1 dưới)
-  | "left-right"; // 2 ảnh (1 trái, 1 phải)
+/** Layout: 1x4 (strip dọc), 2x3, 2x2. (1x3 đã gộp vào 1x4) */
+export type LayoutType = "1x4" | "2x3" | "2x2";
 
 export interface LayoutConfig {
   type: LayoutType;

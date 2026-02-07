@@ -87,6 +87,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/frames" className="hover:text-white transition-colors">
+                  Khung ảnh
+                </Link>
+              </li>
+              <li>
                 <Link href="/photobooth" className="hover:text-white transition-colors">
                   Photobooth
                 </Link>

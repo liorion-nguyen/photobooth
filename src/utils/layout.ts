@@ -1,61 +1,30 @@
 import type { LayoutType, LayoutConfig, LayoutSlot, LayoutState } from "@/types/layout";
 
+/** Quy ước: 1x4 = 4 ô xếp dọc (1 cột 4 hàng). 2x2, 2x3 = hàng × cột. */
 export const LAYOUT_CONFIGS: Record<LayoutType, LayoutConfig> = {
-  single: {
-    type: "single",
-    name: "1 Ảnh",
-    rows: 1,
-    cols: 1,
-    totalSlots: 1,
-    description: "Chụp 1 ảnh duy nhất",
-  },
-  "vertical-4": {
-    type: "vertical-4",
-    name: "4 Ảnh Dọc",
+  "1x4": {
+    type: "1x4",
+    name: "1×4",
     rows: 4,
     cols: 1,
     totalSlots: 4,
-    description: "4 ảnh xếp dọc",
+    description: "4 ô xếp dọc (1 cột 4 hàng)",
   },
-  "horizontal-4": {
-    type: "horizontal-4",
-    name: "4 Ảnh Ngang",
-    rows: 1,
-    cols: 4,
-    totalSlots: 4,
-    description: "4 ảnh xếp ngang",
-  },
-  "grid-2x2": {
-    type: "grid-2x2",
-    name: "Lưới 2x2",
-    rows: 2,
-    cols: 2,
-    totalSlots: 4,
-    description: "4 ảnh lưới 2x2",
-  },
-  "grid-3x3": {
-    type: "grid-3x3",
-    name: "Lưới 3x3",
+  "2x3": {
+    type: "2x3",
+    name: "2×3",
     rows: 3,
-    cols: 3,
-    totalSlots: 9,
-    description: "9 ảnh lưới 3x3",
-  },
-  "top-bottom": {
-    type: "top-bottom",
-    name: "Trên - Dưới",
-    rows: 2,
-    cols: 1,
-    totalSlots: 2,
-    description: "2 ảnh (1 trên, 1 dưới)",
-  },
-  "left-right": {
-    type: "left-right",
-    name: "Trái - Phải",
-    rows: 1,
     cols: 2,
-    totalSlots: 2,
-    description: "2 ảnh (1 trái, 1 phải)",
+    totalSlots: 6,
+    description: "2 cột dọc, mỗi cột 3 ô (lưới 3×2)",
+  },
+  "2x2": {
+    type: "2x2",
+    name: "2×2",
+    rows: 2,
+    cols: 2,
+    totalSlots: 4,
+    description: "2 hàng 2 ô (lưới 2×2)",
   },
 };
 

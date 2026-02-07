@@ -1,6 +1,6 @@
 import Header from "@/components/Layout/Header";
 import Footer from "@/components/Layout/Footer";
-import WeatherAnimation from "@/components/Weather/WeatherAnimation";
+// import WeatherAnimation from "@/components/Weather/WeatherAnimation"; // Disabled to improve performance on mobile devices
 import WeatherNotification from "@/components/Weather/WeatherNotification";
 
 export default function MainLayout({
@@ -10,7 +10,8 @@ export default function MainLayout({
 }) {
   return (
     <div className="min-h-screen flex flex-col relative">
-      <WeatherAnimation />
+      {/* WeatherAnimation disabled to prevent lag on mobile devices */}
+      {/* <WeatherAnimation /> */}
       <div className="relative z-10 bg-transparent">
         <Header />
         <main className="flex-1 bg-transparent">{children}</main>

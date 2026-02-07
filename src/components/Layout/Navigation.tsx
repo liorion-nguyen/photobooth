@@ -13,6 +13,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { label: "Trang chủ", href: "/" },
   { label: "Về chúng tôi", href: "/about" },
+  { label: "Khung ảnh", href: "/frames" },
   { label: "Photobooth", href: "/photobooth" },
 ];
 

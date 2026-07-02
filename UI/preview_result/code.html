@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LUMINA STUDIO | Preview Your Masterpiece</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-primary": "#d0bcff",
+                    "on-secondary-fixed": "#271900",
+                    "on-primary-container": "#fffbff",
+                    "on-background": "#1d1a23",
+                    "on-secondary": "#ffffff",
+                    "on-surface-variant": "#494454",
+                    "surface-container": "#f3ebf8",
+                    "surface-container-highest": "#e7e0ed",
+                    "primary-fixed-dim": "#d0bcff",
+                    "on-surface": "#1d1a23",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed-variant": "#8c0053",
+                    "on-primary-fixed": "#23005c",
+                    "error": "#ba1a1a",
+                    "tertiary-container": "#d23284",
+                    "surface-variant": "#e7e0ed",
+                    "on-tertiary-fixed": "#3e0022",
+                    "on-tertiary-container": "#fffbff",
+                    "tertiary-fixed-dim": "#ffb0cd",
+                    "tertiary": "#b10e6b",
+                    "surface": "#fef7ff",
+                    "surface-container-low": "#f8f1fe",
+                    "on-error-container": "#93000a",
+                    "surface-bright": "#fef7ff",
+                    "surface-container-high": "#ede5f3",
+                    "secondary-fixed": "#ffdea8",
+                    "inverse-on-surface": "#f5eefb",
+                    "on-secondary-fixed-variant": "#5e4200",
+                    "on-secondary-container": "#79570e",
+                    "surface-dim": "#ded7e4",
+                    "outline": "#7b7486",
+                    "background": "#fef7ff",
+                    "primary-fixed": "#e9ddff",
+                    "primary-container": "#8455ef",
+                    "on-primary-fixed-variant": "#5516be",
+                    "error-container": "#ffdad6",
+                    "secondary-container": "#ffd07d",
+                    "primary": "#6b38d4",
+                    "secondary": "#7a580f",
+                    "outline-variant": "#cbc3d7",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed": "#ffd9e4",
+                    "surface-tint": "#6d3bd7",
+                    "inverse-surface": "#322f39",
+                    "secondary-fixed-dim": "#edc06e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-md": "48px",
+                    "margin-mobile": "24px",
+                    "container-max": "1280px",
+                    "unit": "8px",
+                    "stack-sm": "24px",
+                    "margin-desktop": "64px",
+                    "gutter": "32px",
+                    "stack-lg": "80px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Playfair Display"],
+                    "label-caps": ["Inter"],
+                    "headline-lg": ["Playfair Display"],
+                    "body-md": ["Inter"],
+                    "display-md": ["Playfair Display"],
+                    "headline-lg-mobile": ["Playfair Display"],
+                    "body-xl": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["80px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                    "headline-lg": ["40px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "display-md": ["56px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "body-xl": ["20px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.03);
+            border-radius: 32px;
+        }
+
+        .glass-inner-border {
+            border-top: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(132, 85, 239, 0.1), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .perspective-container {
+            perspective: 2000px;
+        }
+
+        .photo-strip-3d {
+            transform: rotateY(-8deg) rotateX(2deg) rotateZ(-1deg);
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .photo-strip-3d:hover {
+            transform: rotateY(0deg) rotateX(0deg) rotateZ(0deg) scale(1.02);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .noise-overlay {
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            opacity: 0.05;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-surface selection:bg-primary-container selection:text-on-primary-container overflow-x-hidden">
+<!-- Aura Editorial Background -->
+<div class="fixed inset-0 -z-10 bg-surface">
+
+<div class="noise-overlay absolute inset-0"></div>
+</div>
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-xl border-b border-white/40 dark:border-outline/20 shadow-sm">
+<div class="flex justify-between items-center h-20 px-6 md:px-margin-desktop max-w-container-max mx-auto">
+<div class="font-display-md text-display-md font-bold tracking-tight text-primary dark:text-primary-fixed-dim">LUMINA STUDIO</div>
+<div class="hidden md:flex items-center gap-gutter">
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-primary transition-all duration-300" href="#">Gallery</a>
+<a class="font-body-md text-body-md text-primary dark:text-primary-fixed font-semibold border-b-2 border-primary transition-all duration-300" href="#">Sessions</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-outline-variant hover:text-primary transition-all duration-300" href="#">Styles</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="hidden md:flex items-center gap-2 px-6 py-2.5 bg-primary text-on-primary rounded-full font-body-md font-semibold hover:opacity-80 active:scale-95 transition-all duration-300">
+                    New Session
+                </button>
+<span class="material-symbols-outlined text-primary cursor-pointer hover:opacity-80 transition-all">account_circle</span>
+<span class="material-symbols-outlined text-primary cursor-pointer hover:opacity-80 transition-all">settings</span>
+</div>
+</div>
+</nav>
+<main class="relative pt-32 pb-stack-lg px-6 md:px-margin-desktop max-w-container-max mx-auto">
+<!-- Header Section -->
+<header class="mb-stack-md text-center md:text-left">
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-2">Your Masterpiece is Ready</h1>
+<p class="font-body-xl text-body-xl text-on-surface-variant opacity-80">Refined by AI, curated by you. A digital artifact of this moment.</p>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+<!-- Cinematic Preview Left -->
+<div class="lg:col-span-7 perspective-container flex justify-center lg:justify-start">
+<div class="photo-strip-3d relative w-full max-w-[420px] glass-panel p-4 shadow-2xl">
+<!-- Photo Strip Mockup -->
+<div class="bg-white p-4 shadow-inner">
+<img class="w-full h-auto aspect-[1/3.2] object-cover rounded-sm" data-alt="A premium high-end vertical photo strip layout featuring four distinct frames of a professional model in editorial poses. The lighting is soft and cinematic, utilizing the warm white and purple tones of the Lumina Studio brand. Each frame shows a different artistic AI style from noir to vivid, presented in a clean magazine-style vertical composition with elegant spacing and subtle typography at the base." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFTsl5Bz5kRzRvIqaxt58-LaLWQCLyG1abaXS-hiiOeHrSkqVXRK91NX4skCOnbx5WF6_AkwBTuPQaJ4sJOlboP9aUc7GuEDu6KgnI2Ry6VvYmXTf44BvxGocClMSdHoWJzu1TQ0ypCg3AFz6GSzoP4XRmXXc0SR7tSeYt6smUOfhBJqFuhakdOIpQDhRE5HIbm9J07UYNmHguVt8LbeoFCsfpJ7GRRfFqtNEZca4H39X8PZO3R3l8ENffHAQsEXmmj3UD66igp6I"/>
+<div class="mt-4 flex justify-between items-center px-2">
+<span class="font-label-caps text-label-caps text-on-surface-variant tracking-[0.2em]">LUMINA STUDIO N°042</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant opacity-40">2024</span>
+</div>
+</div>
+<!-- Decorative Light Reflection -->
+<div class="absolute inset-0 rounded-[32px] pointer-events-none glass-inner-border"></div>
+</div>
+</div>
+<!-- Right Controls Panel -->
+<div class="lg:col-span-5 space-y-gutter">
+<!-- AI Enhancements -->
+<section class="glass-panel p-8 space-y-stack-sm">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-4">AI ENHANCEMENTS</h3>
+<div class="space-y-4">
+<button class="w-full flex items-center justify-between p-4 bg-surface-container-low/50 hover:bg-surface-container rounded-2xl transition-all group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">wb_sunny</span>
+</div>
+<div class="text-left">
+<p class="font-body-md font-semibold text-on-surface">Studio Lighting</p>
+<p class="text-xs text-on-surface-variant opacity-70">Soft-box diffusion effect</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+<button class="w-full flex items-center justify-between p-4 bg-surface-container-low/50 hover:bg-surface-container rounded-2xl transition-all group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary-container/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">grain</span>
+</div>
+<div class="text-left">
+<p class="font-body-md font-semibold text-on-surface">Film Grain</p>
+<p class="text-xs text-on-surface-variant opacity-70">35mm authentic texture</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+<button class="w-full flex items-center justify-between p-4 bg-surface-container-low/50 hover:bg-surface-container rounded-2xl transition-all group overflow-hidden relative">
+<div class="shimmer absolute inset-0 opacity-40"></div>
+<div class="relative flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">auto_awesome</span>
+</div>
+<div class="text-left">
+<p class="font-body-md font-semibold text-on-surface">Vivid Color</p>
+<p class="text-xs text-on-surface-variant opacity-70">AI-powered chromatic boost</p>
+</div>
+</div>
+<span class="relative material-symbols-outlined text-tertiary group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+</div>
+</section>
+<!-- Actions -->
+<section class="grid grid-cols-2 gap-4">
+<button class="col-span-2 py-5 px-8 rounded-full bg-gradient-to-r from-primary to-tertiary text-white font-body-md font-bold shadow-lg hover:shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">download</span>
+                        Download High-Res
+                    </button>
+<button class="py-4 px-6 rounded-3xl bg-white border border-outline-variant hover:bg-surface-container-low text-on-surface font-body-md font-medium transition-all flex flex-col items-center gap-2">
+<span class="material-symbols-outlined text-primary">print</span>
+                        Print to Studio
+                    </button>
+<button class="py-4 px-6 rounded-3xl bg-white border border-outline-variant hover:bg-surface-container-low text-on-surface font-body-md font-medium transition-all flex flex-col items-center gap-2">
+<span class="material-symbols-outlined text-primary">qr_code_2</span>
+                        Share via QR
+                    </button>
+</section>
+<!-- Share -->
+<section class="glass-panel p-6">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant">SOCIAL SYNC</h3>
+<span class="material-symbols-outlined text-on-surface-variant opacity-40 text-sm">close</span>
+</div>
+<div class="flex gap-4">
+<button class="flex-1 flex items-center gap-3 p-3 bg-surface-container-low hover:bg-white rounded-2xl border border-outline-variant/30 transition-all group">
+<span class="material-symbols-outlined text-on-surface">camera_alt</span>
+<span class="font-body-md text-on-surface text-sm">Instagram</span>
+</button>
+<button class="flex-1 flex items-center gap-3 p-3 bg-surface-container-low hover:bg-white rounded-2xl border border-outline-variant/30 transition-all group">
+<span class="material-symbols-outlined text-on-surface">music_note</span>
+<span class="font-body-md text-on-surface text-sm">TikTok</span>
+</button>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-surface-dim w-full py-stack-sm mt-stack-lg border-t border-outline-variant/10">
+<div class="flex flex-col md:flex-row justify-between items-center px-6 md:px-margin-desktop max-w-container-max mx-auto gap-gutter">
+<div class="font-display-md text-display-md text-primary">LUMINA STUDIO</div>
+<div class="flex flex-wrap justify-center gap-gutter">
+<a class="font-label-caps text-label-caps text-on-surface-variant dark:text-outline opacity-60 hover:text-primary hover:opacity-100 transition-opacity ease-in-out duration-200" href="#">Privacy Policy</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant dark:text-outline opacity-60 hover:text-primary hover:opacity-100 transition-opacity ease-in-out duration-200" href="#">Terms of Service</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant dark:text-outline opacity-60 hover:text-primary hover:opacity-100 transition-opacity ease-in-out duration-200" href="#">Studio Locations</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant dark:text-outline opacity-60 hover:text-primary hover:opacity-100 transition-opacity ease-in-out duration-200" href="#">Support</a>
+</div>
+<p class="font-label-caps text-label-caps text-on-surface-variant dark:text-outline opacity-40 text-center md:text-right">
+                © 2024 LUMINA CREATIVE TECHNOLOGY STUDIO. ALL RIGHTS RESERVED.
+            </p>
+</div>
+</footer>
+<script>
+        // Micro-interaction for the photo strip
+        const photoStrip = document.querySelector('.photo-strip-3d');
+        const container = document.querySelector('.perspective-container');
+
+        container.addEventListener('mousemove', (e) => {
+            const rect = container.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = (y - centerY) / 25;
+            const rotateY = (centerX - x) / 25;
+
+            photoStrip.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+        });
+
+        container.addEventListener('mouseleave', () => {
+            photoStrip.style.transform = `rotateY(-8deg) rotateX(2deg) rotateZ(-1deg)`;
+        });
+    </script>
+</body></html>

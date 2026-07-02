@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LUMINA AI | Technological Elegance in Photobooth Experiences</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-container": "#fffbff",
+                    "on-secondary": "#ffffff",
+                    "secondary-container": "#ffd07d",
+                    "on-tertiary-fixed": "#3e0022",
+                    "surface-variant": "#e7e0ed",
+                    "inverse-surface": "#322f39",
+                    "surface": "#fef7ff",
+                    "surface-container": "#f3ebf8",
+                    "surface-bright": "#fef7ff",
+                    "error": "#ba1a1a",
+                    "error-container": "#ffdad6",
+                    "secondary": "#7a580f",
+                    "on-error": "#ffffff",
+                    "on-background": "#1d1a23",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-low": "#f8f1fe",
+                    "on-surface": "#1d1a23",
+                    "primary-fixed": "#e9ddff",
+                    "inverse-on-surface": "#f5eefb",
+                    "surface-tint": "#6d3bd7",
+                    "tertiary-fixed-dim": "#ffb0cd",
+                    "on-secondary-fixed": "#271900",
+                    "primary-container": "#8455ef",
+                    "secondary-fixed-dim": "#edc06e",
+                    "on-error-container": "#93000a",
+                    "inverse-primary": "#d0bcff",
+                    "on-primary-container": "#fffbff",
+                    "surface-container-highest": "#e7e0ed",
+                    "primary-fixed-dim": "#d0bcff",
+                    "on-secondary-fixed-variant": "#5e4200",
+                    "on-tertiary-fixed-variant": "#8c0053",
+                    "secondary-fixed": "#ffdea8",
+                    "on-secondary-container": "#79570e",
+                    "on-primary-fixed": "#23005c",
+                    "on-primary": "#ffffff",
+                    "on-surface-variant": "#494454",
+                    "surface-container-high": "#ede5f3",
+                    "background": "#fef7ff",
+                    "surface-container-lowest": "#ffffff",
+                    "outline-variant": "#cbc3d7",
+                    "tertiary": "#b10e6b",
+                    "primary": "#6b38d4",
+                    "on-primary-fixed-variant": "#5516be",
+                    "tertiary-container": "#d23284",
+                    "tertiary-fixed": "#ffd9e4",
+                    "outline": "#7b7486",
+                    "surface-dim": "#ded7e4"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "32px",
+                    "unit": "8px",
+                    "stack-lg": "80px",
+                    "margin-desktop": "64px",
+                    "margin-mobile": "24px",
+                    "container-max": "1280px",
+                    "stack-md": "48px",
+                    "stack-sm": "24px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Playfair Display"],
+                    "display-md": ["Playfair Display"],
+                    "display-lg": ["Playfair Display"],
+                    "label-caps": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-xl": ["Inter"],
+                    "headline-lg-mobile": ["Playfair Display"]
+            },
+            "fontSize": {
+                    "headline-lg": ["40px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "display-md": ["56px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "display-lg": ["80px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "body-xl": ["20px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 40px 40px rgba(0, 0, 0, 0.03);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #6b38d4 0%, #d23284 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .primary-gradient {
+            background: linear-gradient(135deg, #6b38d4 0%, #d23284 100%);
+        }
+        .marquee {
+            display: flex;
+            width: fit-content;
+            animation: marquee 40s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md overflow-x-hidden">
+<!-- Animated Global Shader Background -->
+
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/60 backdrop-blur-md shadow-sm">
+<nav class="flex justify-between items-center px-6 md:px-16 py-6 max-w-container-max mx-auto">
+<div class="font-display-md text-[32px] tracking-tighter text-primary">LUMINA AI</div>
+<div class="hidden md:flex items-center gap-10">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-caps text-label-caps" href="#features">Features</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-caps text-label-caps" href="#gallery">Gallery</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-caps text-label-caps" href="#pricing">Pricing</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-caps text-label-caps" href="#studio">Studio</a>
+</div>
+<div class="flex items-center gap-6">
+<button class="hidden md:block text-on-surface-variant hover:text-primary font-semibold transition-colors">Login</button>
+<button class="primary-gradient text-white px-8 py-3 rounded-full font-semibold hover:scale-105 transition-transform duration-300 ease-out active:scale-95 shadow-lg">Get Started</button>
+</div>
+</nav>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative pt-40 pb-24 md:pt-64 md:pb-48 px-6 md:px-16 max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div class="z-10 reveal">
+<span class="font-label-caps text-label-caps text-primary tracking-[0.2em] mb-6 block">NEXT-GEN AI ENGINE</span>
+<h1 class="font-display-lg text-headline-lg md:text-display-lg mb-8 leading-[1.1] text-on-background">
+                    Create AI Photobooth <span class="italic font-normal">Experiences</span> that people never forget.
+                </h1>
+<p class="font-body-xl text-body-xl text-on-surface-variant mb-12 max-w-lg">
+                    Transform any event into a high-end editorial studio. Our advanced AI engine turns simple selfies into branded works of art instantly.
+                </p>
+<div class="flex flex-wrap gap-4">
+<button class="primary-gradient text-white px-10 py-5 rounded-full font-semibold text-lg hover:scale-105 transition-transform shadow-xl">Launch Booth</button>
+<button class="bg-surface-container-low text-on-surface px-10 py-5 rounded-full font-semibold text-lg border border-outline-variant hover:bg-surface transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined">play_circle</span> Watch Demo
+                    </button>
+</div>
+</div>
+<div class="relative reveal delay-200">
+<div class="absolute -inset-10 bg-primary/10 blur-[120px] rounded-full"></div>
+<div class="relative rounded-[40px] overflow-hidden shadow-2xl glass-card p-4 transform lg:rotate-3 transition-transform hover:rotate-0 duration-700">
+<img alt="AI Photobooth Mockup Display" class="w-full h-auto rounded-[32px]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTk4sE611OYVnWors7ZDbgM3wm726Xobs5xpiOcH0w9gHKOKSUx_yYTWMweJ-rCSCDLtoThtSoh7n3K1LKeUV54We6i0F7nyaeB0uCHCRAOMAmcSd35u525InCQ86lT2xjm7fEnLxsG9aqYDtHqhxDd5akKlxvwvQ1G315yUESl6-C1rZbYepwzeRylRVtBWhI9WVbFkzGIsPOR8nbI2kNqUMtlNbzj0rauLcbOJxsvEEByr4e3vKN_Sg0BiRIcnkJ-zUzjnfe2dE"/>
+</div>
+<!-- Floaties -->
+<div class="absolute -bottom-8 -left-8 glass-card p-6 rounded-3xl shadow-xl hidden md:block">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center text-white">
+<span class="material-symbols-outlined">auto_fix_high</span>
+</div>
+<div>
+<div class="font-semibold text-sm">Processing...</div>
+<div class="text-xs text-on-surface-variant">Applying AI Noir Filter</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Trust Section -->
+<section class="py-24 bg-surface-container-lowest/40 backdrop-blur-sm border-y border-outline-variant reveal">
+<div class="px-6 md:px-16 max-w-container-max mx-auto text-center">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-12 opacity-70">TRUSTED BY THE WORLD'S MOST INNOVATIVE TEAMS</p>
+<div class="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
+<div class="font-display-md text-2xl">VOGUE</div>
+<div class="font-display-md text-2xl">APPLE</div>
+<div class="font-display-md text-2xl">NIKE</div>
+<div class="font-display-md text-2xl">MUSEUM OF ART</div>
+<div class="font-display-md text-2xl">STANFORD</div>
+</div>
+</div>
+</section>
+<!-- Features Horizontal Scroll -->
+<section class="py-stack-lg overflow-hidden" id="features">
+<div class="px-6 md:px-16 max-w-container-max mx-auto mb-16 reveal">
+<h2 class="font-headline-lg text-headline-lg text-on-background">Engineered for Artistry.</h2>
+</div>
+<div class="flex gap-8 px-6 md:px-16 pb-12 overflow-x-auto no-scrollbar snap-x snap-mandatory">
+<!-- Feature 1 -->
+<div class="flex-none w-[85vw] md:w-[450px] snap-center">
+<div class="glass-card p-12 rounded-[32px] h-[600px] flex flex-col group hover:translate-y-[-8px] transition-transform duration-500">
+<div class="mb-8 w-16 h-16 rounded-2xl bg-primary-container/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined !text-4xl" style="font-variation-settings: 'FILL' 1;">videocam</span>
+</div>
+<h3 class="font-headline-lg text-3xl mb-4 text-on-surface">Live Studio Camera</h3>
+<p class="text-on-surface-variant text-lg mb-auto">High-definition live preview with real-time exposure control and professional lighting presets.</p>
+<div class="relative rounded-2xl overflow-hidden mt-8 aspect-video border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional camera interface showing a live preview of a high-end photography studio setting with soft focus backgrounds and glowing atmospheric lighting, styled with clean white and soft purple accents to match a luxury tech brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe7El_g3uLMLjuDZa980fxzfHYLVSo9Xt0msBJsRSs6iGIZIPNYsU_FTbyeqzmzFp6YdbsxobcfSoK2wfvptuKfOsJHflLN5sqAHaHdom2e1PBqp_Y37IxB3zQfl4kmGOvezPa8jzkxKSuIJD5EgBvZkWR-QLfWZowEcRp_nc527ERxfkyFaxuQ8y4Njn0p8eziUQJl6_WZNNKL4Z7EeH49vomcyXbh_U_RupR6TIi-QReLrCXiOgRKmp9FbATv9PWd8-yW6sRFZA"/>
+</div>
+</div>
+</div>
+<!-- Feature 2 -->
+<div class="flex-none w-[85vw] md:w-[450px] snap-center">
+<div class="glass-card p-12 rounded-[32px] h-[600px] flex flex-col group hover:translate-y-[-8px] transition-transform duration-500">
+<div class="mb-8 w-16 h-16 rounded-2xl bg-tertiary-container/10 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined !text-4xl" style="font-variation-settings: 'FILL' 1;">auto_fix_high</span>
+</div>
+<h3 class="font-headline-lg text-3xl mb-4 text-on-surface">Generative AI Filters</h3>
+<p class="text-on-surface-variant text-lg mb-auto">Instantly swap backgrounds or stylize portraits into oil paintings, cinematic frames, or vaporwave aesthetics.</p>
+<div class="relative rounded-2xl overflow-hidden mt-8 aspect-video border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A split-screen comparison showing a standard portrait on one side and a stunning, AI-enhanced artistic version on the other, featuring vibrant colors, dreamlike textures, and high-fashion editorial styling consistent with an elegant purple and pink brand palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBmlzmMkqASIe3Q-VWQagGyo4CJJXKIZ_Qd5Jm-XZWnHhCLUJg-sakck56nPoPiNrQkmNKiDnaWbtCu8rtZMs3T0kz_9oNlBeDxCuqE_QHQ0jzk4NFgfMZdUXVTfWQxtlUzgp5dvzLHbDfp8OqFbOOjrGwCsc8_jCLUeU8Pcc1RPclz30hhECaDHIb4RkfBUyyUGy6dAxwl91juTdLkA1_UjT86Jcscf7YfiSI2cI9OBbJYN2Ch_cfw_VTbF5R7OXdEXMDbiAWOgI"/>
+</div>
+</div>
+</div>
+<!-- Feature 3 -->
+<div class="flex-none w-[85vw] md:w-[450px] snap-center">
+<div class="glass-card p-12 rounded-[32px] h-[600px] flex flex-col group hover:translate-y-[-8px] transition-transform duration-500">
+<div class="mb-8 w-16 h-16 rounded-2xl bg-secondary-container/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined !text-4xl" style="font-variation-settings: 'FILL' 1;">dashboard_customize</span>
+</div>
+<h3 class="font-headline-lg text-3xl mb-4 text-on-surface">Custom Templates</h3>
+<p class="text-on-surface-variant text-lg mb-auto">Drag-and-drop designer for branded overlays, interactive layouts, and custom typography suites.</p>
+<div class="relative rounded-2xl overflow-hidden mt-8 aspect-video border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A clean UI interface showing a series of elegant graphic design templates for photo prints, featuring minimalist typography and sophisticated layouts in a high-key, modern white and soft beige studio environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDg2g0OP8u1Qk2aUKYMSzmmNWSp5TcN4vU-hm5QjBrRwhO45v_lzcsWS0bJS7QzqMASlbNo5oXBrzMvVif6SQ77BZQMeHvIPRgnJKF2CGR5XqIeeVaMA88qq8u--X0l-0yun4PU-LFwrXqn-oUwlLD35cbGXBz489Fgn9iJOL7lu90NwDn_TXFb1vrGYEF8JtrS3xVfDA3137kqs86tDQ1qjI1Fu8-svPCZRUVV1P2gHOWM95UTgqGjMmHj63WT4ofggwIs61jbxoQ"/>
+</div>
+</div>
+</div>
+<!-- Feature 4 -->
+<div class="flex-none w-[85vw] md:w-[450px] snap-center">
+<div class="glass-card p-12 rounded-[32px] h-[600px] flex flex-col group hover:translate-y-[-8px] transition-transform duration-500">
+<div class="mb-8 w-16 h-16 rounded-2xl bg-primary-fixed/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined !text-4xl" style="font-variation-settings: 'FILL' 1;">share</span>
+</div>
+<h3 class="font-headline-lg text-3xl mb-4 text-on-surface">Instant Sharing</h3>
+<p class="text-on-surface-variant text-lg mb-auto">Automatic cloud sync and QR code generation for instant gallery access and social media sharing.</p>
+<div class="relative rounded-2xl overflow-hidden mt-8 aspect-video border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A smartphone displaying a stylish photo gallery app with social media icons for quick sharing, set against a blurred background of a sophisticated event with soft purple and white ambient light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMgRm5fbhhrZEIYDBzmPF1hZQo0yqq2FCjkk6XlPAKh7cOw6wxXag3qCGfSUZPuZnv2YNkGHyjkdxn6JEE8OjtdfCURcvqr4QwjJ8bffFYrjV2VSWY4FKPDzg6Gqs5eZFn_6aLKuKyGUGN2oh2-3r5qTyQ2gloIkTGYAA5OO5uE9_J7sUSpJwCX5GZfx8p9KRdo_2WtJR1JdJqVfLZr1Oyn4jeL33foDFlF5ONrtjalgqhQXHePBRY2VEHCgTNtD_e_mGyIPL4Riw"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive Preview Section -->
+<section class="py-stack-lg px-6 md:px-16 max-w-container-max mx-auto reveal">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+<div>
+<h2 class="font-display-md text-headline-lg md:text-display-md mb-8 leading-tight">The Studio, in your <span class="italic text-primary">browser</span>.</h2>
+<p class="font-body-xl text-body-xl text-on-surface-variant mb-12">Experience the power of our real-time AI processing. No apps to download, just a seamless, glassmorphic interface that feels like the future.</p>
+<ul class="space-y-6">
+<li class="flex items-center gap-4">
+<span class="w-6 h-6 rounded-full primary-gradient flex items-center justify-center text-white">
+<span class="material-symbols-outlined !text-[14px]">check</span>
+</span>
+<span class="font-medium text-lg">Sub-200ms latency on AI transformations</span>
+</li>
+<li class="flex items-center gap-4">
+<span class="w-6 h-6 rounded-full primary-gradient flex items-center justify-center text-white">
+<span class="material-symbols-outlined !text-[14px]">check</span>
+</span>
+<span class="font-medium text-lg">4K Export capabilities for large prints</span>
+</li>
+<li class="flex items-center gap-4">
+<span class="w-6 h-6 rounded-full primary-gradient flex items-center justify-center text-white">
+<span class="material-symbols-outlined !text-[14px]">check</span>
+</span>
+<span class="font-medium text-lg">Multi-device sync for hybrid events</span>
+</li>
+</ul>
+</div>
+<div class="relative aspect-[4/5] md:aspect-square group">
+<!-- Fake UI Mockup -->
+<div class="absolute inset-0 glass-card rounded-[48px] p-8 shadow-2xl overflow-hidden border border-white/60">
+<div class="flex justify-between items-center mb-8">
+<div class="text-primary font-bold text-lg">LUMINA CAM</div>
+<div class="flex gap-2">
+<div class="w-2 h-2 rounded-full bg-error"></div>
+<div class="w-2 h-2 rounded-full bg-outline"></div>
+</div>
+</div>
+<div class="relative aspect-square rounded-3xl overflow-hidden bg-surface-dim group-hover:scale-[1.02] transition-transform duration-700">
+<img class="w-full h-full object-cover" data-alt="A portrait of a stylish individual in a modern art gallery, being processed by a digital overlay of geometric lines and glowing points, representing the AI analysis phase in a high-end photography application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBMpYuAT5kZIMhVnOV-EzLZuBobg8UDz5fNG0OdVdSj1KEb-4azViUDq-JX8x3T35PFWy5PHqtrWFqcAI0amFKzx1BMuk9M5MzB2wXa0_iRr2lpVy5XHNuhY5A__jlUxeXYFco1GKpiRNeV7uOJ0ZpN1jII5G_pfTPF8ZQYzwXkiGj2BWuQmMXhKXJIZ44kB0fiHuXfsQddnFw8qsXhkERIKx-hRFp0pcRlkQ5LmxWmDivuX4XWfU-_aQektREQN9n0L6eiDUg4UQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+<div class="absolute bottom-6 left-6 right-6 flex justify-between items-end">
+<div class="text-white">
+<div class="text-xs uppercase tracking-widest opacity-70">Style Selected</div>
+<div class="text-xl font-headline-lg">CYBER_NOIR</div>
+</div>
+<div class="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center text-white">
+<span class="material-symbols-outlined">auto_fix_high</span>
+</div>
+</div>
+</div>
+<div class="mt-8 flex justify-center gap-6">
+<div class="w-14 h-14 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-colors cursor-pointer"><span class="material-symbols-outlined">close</span></div>
+<div class="w-20 h-20 rounded-full primary-gradient shadow-lg flex items-center justify-center text-white scale-110 cursor-pointer active:scale-95 transition-transform"><span class="material-symbols-outlined !text-4xl">photo_camera</span></div>
+<div class="w-14 h-14 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-colors cursor-pointer"><span class="material-symbols-outlined">refresh</span></div>
+</div>
+</div>
+<!-- Glow effect -->
+<div class="absolute -z-10 -bottom-12 -right-12 w-64 h-64 bg-tertiary/20 blur-[80px] rounded-full"></div>
+</div>
+</div>
+</section>
+<!-- Gallery Masonry -->
+<section class="py-stack-lg bg-surface-container-low/30 reveal" id="gallery">
+<div class="px-6 md:px-16 max-w-container-max mx-auto text-center mb-16">
+<h2 class="font-display-md text-headline-lg md:text-display-md mb-4">Capturing Brilliance.</h2>
+<p class="text-on-surface-variant font-body-xl">A glimpse into the diverse styles and moments captured by Lumina AI.</p>
+</div>
+<div class="px-6 md:px-16 max-w-container-max mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
+<div class="space-y-6">
+<div class="rounded-3xl overflow-hidden glass-card group cursor-pointer relative">
+<img class="w-full h-[400px] object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A high-fashion portrait with deep shadows and soft highlights in a black and white editorial style, emphasizing artistic texture and luxury branding." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVRXl58rpesjYCds5zMVoP26u8H_2u9xLZ-Vopl3ZzrSj-oSMNThv86UrT_9GBJtXha89er8Z3TOYijBN5g3_aankpmEe-KUH_E-sQyJKUy42f1ZyUbJPBPce2LsIQnhZ7C6h60A7NiCygHCoeB8Gn4h2NKEOGmuESouJ9yEG1xa03ojrk4KN7O70s-2NOo2qrLKFHgCqncOxnCZJLuBXuZt-UnFRjI2V6FSDlvjTZIW_JX9m1DzOWGV0I4_nYekAoe2jvsOCi5ko"/>
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="rounded-3xl overflow-hidden glass-card group cursor-pointer relative">
+<img class="w-full h-[250px] object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A vibrant street style photograph with neon pink and purple lighting accents, reflecting a futuristic urban aesthetic for a high-end tech platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1raT3tD_7LBqfXL326AmIUfX2flH5TPuEq6A9w6chuDKga501Duv7r9SLYq3ZF6qJvO-WPyoqnnngFD_r-H59CWDgeuMW0j-zkCktZwdZ0mG44gMmrXRWuVWS8Jqk4bAKI7Iuud5efvnDhOIjVkpwArnr9PpyOxEdjrKecCv_gLBJ-OrT1K1aG-mYVQ-5njos4MDLfsYAB0pCK-safcduAzy63OYEO3fKjqKjK_OjpDJIBxG9jJSsov2fJlqYbdw-qmuYndK_UgI"/>
+</div>
+</div>
+<div class="space-y-6 pt-12">
+<div class="rounded-3xl overflow-hidden glass-card group cursor-pointer relative">
+<img class="w-full h-[300px] object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A dreamy, soft-focus wedding portrait featuring warm golden hour lighting and delicate AI-enhanced floral elements, styled for a premium wedding studio brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9doDzwR6dJxXnnHf6lP_iX53GRZ0jmMaRsTy53kIxXi_-qgRlwwpY_IhBm5V2jnCN6n9a3mJKRQAoMwGwvBkn-j93CSmjGoumi_dQ3jwnM14h2HtAQ8qnxcXB4yA8nC4nUmRuOXSTNkLQAhv-NEnoaUQHsNYb0a6GYzNA7OeQwrhdK5rA_deHQ7AH-fQvQAViM_qtk4k4H5Dg4nvcF-98FLLlRWQMhHy8Q5erjFlXSQ6tn5po9mbZ0cKoDcBLOSrPYTda3OStC24"/>
+</div>
+<div class="rounded-3xl overflow-hidden glass-card group cursor-pointer relative">
+<img class="w-full h-[450px] object-cover group-hover:scale-110 transition-transform duration-700" data-alt="An abstract artistic representation of a face created through digital particles and flowing light, emphasizing the technological elegance of the AI photobooth." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3bQnIL9FPx5WimVfo9qDrIEBgjqyVU_uoSPv4j0VOpdT71-FpH8g5MTACJRE2Zb6fRM7qVE90Q1Ox3qBfJsk3FRtLQJll-932XT2a224XGMapsyiWCkxbnJyJF_XnJOkMIiJA56XLpbL6bjiIlWno2hp0q8nerkH2sVpVLCFbFDDVPeapuxE4_APUIN6_P63DbN03Sfx9DKmhcePwLpb6QGg456u7SR2mwl3rPCD7pARnKARocarnd4-6Mb_Vj1BABuuD5H_z7GY"/>
+</div>
+</div>
+<div class="space-y-6">
+<div class="rounded-3xl overflow-hidden glass-card group cursor-pointer relative">
+<img class="w-full h-[400px] object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A clean, minimalist portrait of a professional against a solid neutral background, with sharp focus and subtle AI-driven skin retouching for a corporate brand profile." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxy8gObO3a9GUYPEXtPZIe5aWCAKWVv74HdTiDnLSsIXl8jp1I1c9Hnh0rO1lrINpJFna6zJRZJLVaCXDNkvBj1WoUmrkbDMRIojTvKuaAMC0A_dNz9KGBbMGa3EKepXMprVbwBXCu7J2tK65qm-evoytSNzTAhtuRHSgtKL3m0pFpD3rTSgYbxA8WbWnoiyHd2snPas9zEsxUsMS2k-WnHT9-WzyPPqU8Spd36oN-urPv5ipo5WttwDq7V3YtIxQMOmkcVqPVO2g"/>
+</div>
+<div class="rounded-3xl overflow-hidden glass-card group cursor-pointer relative">
+<img class="w-full h-[250px] object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A cinematic action shot with motion blur and dynamic lighting effects, capturing a high-energy moment in a sleek, modern event space." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3ZWfp6AGMipbX9JVgwVAit-QifmG7loWrl2bd6i3_P8EwgKBu7pEB9MrpBbk2YYwrRe_pFCuDlzizKrvuSM9K8xPJkYgbovvwuyR6lJ8uEpwLcWvPB06WspfH9iNwsuPAfNwO7vKiiAurAohj27swElJFVuN3jVpNSQqcXM8eCcuhg804VNhidoB35bwCQGmZ3hLZkgiyIi8E8Xcu8ECJTAYC8xxvT8VeFRit-aRoGELGsc5F4HxdZd_5J01okOxseeGTVEpQ5Bg"/>
+</div>
+</div>
+<div class="space-y-6 pt-12">
+<div class="rounded-3xl overflow-hidden glass-card group cursor-pointer relative">
+<img class="w-full h-[300px] object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A group photo from a high-end gala, featuring elegant guests and a sophisticated branded backdrop, enhanced with soft luxury photo filters." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCS0qXYTwMGuwbfMtwhffa-FdUK7Q4hyIIjAYnGv24EIl5CG_ODswV49dafTGSKXY7nB_oha6SaHI4nA64ac-l9Use2MXCqqRZ-6tae7d3_2nq3yH3mShpcu1MwBevpdOMWbn5ZQt564FSkltSpEVI1FrJC3EUi7C5noliS7pz9Q3bORs7BjKLQpGybpcfDol-ReG895Ej7q7uugysIyx9_xNhR0eaHtBb3Ls6xU3rBvlADomsOmwRv8UOlJHgHeNuzPS4FcWGmxJ0"/>
+</div>
+<div class="rounded-3xl overflow-hidden glass-card group cursor-pointer relative">
+<img class="w-full h-[450px] object-cover group-hover:scale-110 transition-transform duration-700" data-alt="An intimate close-up portrait highlighting texture and light, with a warm color palette of cream and soft pink, perfect for an editorial lifestyle campaign." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4VyH6sFKmd2Pu12aJacY9xeFqpLq8kronLQn3j6LstYXrtZJCxEgfArTHZqJ1KtC9gD4K8N3465-ImhdcO3X8Sli9gEmJ2p1IdwiIUCMrljpPJiqRfZUAx0vIjfKIIOpY4NzNbA0Ni1UYbnXlXUdsNP9UnBjZbCLoX368NNNtP52z3MZnTrakwfhOW5edhJuqS6mFKiqLNnI8poez4RZuqfIqzlAMWvlaxAFt6wZ6nENy8SdsYnTN_eMgo-jEUZAC1QpMrriArsg"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Workflow Timeline -->
+<section class="py-stack-lg px-6 md:px-16 max-w-container-max mx-auto reveal">
+<h2 class="font-headline-lg text-headline-lg mb-20 text-center">Four steps to <span class="text-primary italic">Perfection</span>.</h2>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<div class="relative group">
+<div class="font-display-md text-8xl text-surface-container-highest mb-8 group-hover:text-primary/20 transition-colors">01</div>
+<h4 class="text-2xl font-bold mb-4">Scan &amp; Join</h4>
+<p class="text-on-surface-variant">Guests scan a unique QR code at the event to join the live studio queue instantly on their own devices.</p>
+</div>
+<div class="relative group">
+<div class="font-display-md text-8xl text-surface-container-highest mb-8 group-hover:text-primary/20 transition-colors">02</div>
+<h4 class="text-2xl font-bold mb-4">Pose &amp; Capture</h4>
+<p class="text-on-surface-variant">Capture professional shots using our mobile or desktop interface with real-time AI guidance for perfect posing.</p>
+</div>
+<div class="relative group">
+<div class="font-display-md text-8xl text-surface-container-highest mb-8 group-hover:text-primary/20 transition-colors">03</div>
+<h4 class="text-2xl font-bold mb-4">AI Stylization</h4>
+<p class="text-on-surface-variant">Our generative engine processes the image in seconds, applying your brand's unique AI art style or background.</p>
+</div>
+<div class="relative group">
+<div class="font-display-md text-8xl text-surface-container-highest mb-8 group-hover:text-primary/20 transition-colors">04</div>
+<h4 class="text-2xl font-bold mb-4">Instant Share</h4>
+<p class="text-on-surface-variant">The final masterpiece is delivered via SMS or Email with full branding, ready for social media domination.</p>
+</div>
+</div>
+</section>
+<!-- Testimonials Marquee -->
+<section class="py-stack-lg overflow-hidden bg-on-background reveal">
+<div class="px-6 md:px-16 max-w-container-max mx-auto mb-16">
+<h2 class="font-display-md text-headline-lg md:text-display-md text-white">Words from the <span class="italic text-tertiary">Studio</span>.</h2>
+</div>
+<div class="marquee gap-8 px-8">
+<!-- Duplicate for seamless scroll -->
+<div class="flex gap-8">
+<div class="w-[400px] h-64 glass-card !bg-white/5 !border-white/10 p-10 rounded-3xl text-white flex flex-col justify-between">
+<p class="text-lg italic opacity-80">"Lumina transformed our gala. It wasn't just a photobooth; it was an artistic installation that everyone kept talking about."</p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-variant"></div>
+<div>
+<div class="font-bold">Sarah Jenkins</div>
+<div class="text-sm opacity-60">Director, Vogue Events</div>
+</div>
+</div>
+</div>
+<div class="w-[400px] h-64 glass-card !bg-white/5 !border-white/10 p-10 rounded-3xl text-white flex flex-col justify-between">
+<p class="text-lg italic opacity-80">"The AI stylization is leagues ahead of anything else. It truly captures the essence of tech-as-art."</p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-variant"></div>
+<div>
+<div class="font-bold">Marcus Thorne</div>
+<div class="text-sm opacity-60">Creative Lead, Apple</div>
+</div>
+</div>
+</div>
+<div class="w-[400px] h-64 glass-card !bg-white/5 !border-white/10 p-10 rounded-3xl text-white flex flex-col justify-between">
+<p class="text-lg italic opacity-80">"Integration was seamless. We deployed it across 12 university campuses in one week. Incredible scale."</p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-variant"></div>
+<div>
+<div class="font-bold">Elena Rodriguez</div>
+<div class="text-sm opacity-60">Marketing VP, EduCorp</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Duplicate set -->
+<div class="flex gap-8">
+<div class="w-[400px] h-64 glass-card !bg-white/5 !border-white/10 p-10 rounded-3xl text-white flex flex-col justify-between">
+<p class="text-lg italic opacity-80">"Lumina transformed our gala. It wasn't just a photobooth; it was an artistic installation that everyone kept talking about."</p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-variant"></div>
+<div>
+<div class="font-bold">Sarah Jenkins</div>
+<div class="text-sm opacity-60">Director, Vogue Events</div>
+</div>
+</div>
+</div>
+<div class="w-[400px] h-64 glass-card !bg-white/5 !border-white/10 p-10 rounded-3xl text-white flex flex-col justify-between">
+<p class="text-lg italic opacity-80">"The AI stylization is leagues ahead of anything else. It truly captures the essence of tech-as-art."</p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-variant"></div>
+<div>
+<div class="font-bold">Marcus Thorne</div>
+<div class="text-sm opacity-60">Creative Lead, Apple</div>
+</div>
+</div>
+</div>
+<div class="w-[400px] h-64 glass-card !bg-white/5 !border-white/10 p-10 rounded-3xl text-white flex flex-col justify-between">
+<p class="text-lg italic opacity-80">"Integration was seamless. We deployed it across 12 university campuses in one week. Incredible scale."</p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-variant"></div>
+<div>
+<div class="font-bold">Elena Rodriguez</div>
+<div class="text-sm opacity-60">Marketing VP, EduCorp</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Pricing Section -->
+<section class="py-stack-lg px-6 md:px-16 max-w-container-max mx-auto reveal" id="pricing">
+<div class="text-center mb-20">
+<h2 class="font-display-md text-headline-lg md:text-display-md mb-4">Investment in Art.</h2>
+<p class="text-on-surface-variant text-xl">Plans tailored for solo creators and global studio networks.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Personal -->
+<div class="glass-card p-10 rounded-[32px] flex flex-col hover:scale-105 transition-transform duration-500">
+<div class="mb-8">
+<span class="font-label-caps text-label-caps text-on-surface-variant">PERSONAL</span>
+<div class="text-5xl font-display-md mt-4">$49<span class="text-lg text-on-surface-variant font-body-md">/event</span></div>
+</div>
+<ul class="space-y-4 mb-12 flex-grow">
+<li class="flex gap-3 text-on-surface-variant"><span class="material-symbols-outlined text-primary">check</span> 24h Booth Access</li>
+<li class="flex gap-3 text-on-surface-variant"><span class="material-symbols-outlined text-primary">check</span> Standard AI Filters</li>
+<li class="flex gap-3 text-on-surface-variant"><span class="material-symbols-outlined text-primary">check</span> Up to 200 Guests</li>
+<li class="flex gap-3 text-on-surface-variant"><span class="material-symbols-outlined text-primary">check</span> QR Code Sharing</li>
+</ul>
+<button class="w-full py-4 rounded-full border border-outline hover:bg-on-surface hover:text-white transition-colors font-semibold">Choose Personal</button>
+</div>
+<!-- Studio -->
+<div class="glass-card p-10 rounded-[40px] flex flex-col border-primary/20 bg-primary/5 relative scale-105 shadow-2xl z-10">
+<div class="absolute top-0 right-10 -translate-y-1/2 bg-primary-container text-white px-6 py-2 rounded-full font-label-caps text-[10px] tracking-widest shadow-lg">MOST POPULAR</div>
+<div class="mb-8">
+<span class="font-label-caps text-label-caps text-primary">STUDIO PRO</span>
+<div class="text-5xl font-display-md mt-4">$199<span class="text-lg text-on-surface-variant font-body-md">/month</span></div>
+</div>
+<ul class="space-y-4 mb-12 flex-grow">
+<li class="flex gap-3 font-semibold"><span class="material-symbols-outlined text-primary">check</span> Unlimited Events</li>
+<li class="flex gap-3 font-semibold"><span class="material-symbols-outlined text-primary">check</span> Custom AI Style Training</li>
+<li class="flex gap-3 font-semibold"><span class="material-symbols-outlined text-primary">check</span> Full White-labeling</li>
+<li class="flex gap-3 font-semibold"><span class="material-symbols-outlined text-primary">check</span> Priority AI Processing</li>
+<li class="flex gap-3 font-semibold"><span class="material-symbols-outlined text-primary">check</span> Advanced Analytics</li>
+</ul>
+<button class="w-full py-4 rounded-full primary-gradient text-white shadow-xl hover:scale-105 transition-transform font-semibold">Start Pro Studio</button>
+</div>
+<!-- Enterprise -->
+<div class="glass-card p-10 rounded-[32px] flex flex-col border-secondary/20 hover:scale-105 transition-transform duration-500">
+<div class="mb-8">
+<span class="font-label-caps text-label-caps text-secondary">ENTERPRISE</span>
+<div class="text-5xl font-display-md mt-4 italic">Custom</div>
+</div>
+<ul class="space-y-4 mb-12 flex-grow">
+<li class="flex gap-3 text-on-surface-variant"><span class="material-symbols-outlined text-secondary">check</span> Global API Access</li>
+<li class="flex gap-3 text-on-surface-variant"><span class="material-symbols-outlined text-secondary">check</span> Dedicated Success Manager</li>
+<li class="flex gap-3 text-on-surface-variant"><span class="material-symbols-outlined text-secondary">check</span> Custom Hardware SDK</li>
+<li class="flex gap-3 text-on-surface-variant"><span class="material-symbols-outlined text-secondary">check</span> On-premise AI Hosting</li>
+</ul>
+<button class="w-full py-4 rounded-full border border-secondary text-secondary hover:bg-secondary hover:text-white transition-colors font-semibold">Contact Sales</button>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-stack-lg px-6 md:px-16 max-w-container-max mx-auto reveal">
+<div class="primary-gradient rounded-[64px] p-16 md:p-32 text-center text-white relative overflow-hidden group">
+<div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+<div class="absolute -top-24 -left-24 w-96 h-96 bg-white/20 blur-[100px] rounded-full"></div>
+<div class="absolute -bottom-24 -right-24 w-96 h-96 bg-tertiary/40 blur-[100px] rounded-full"></div>
+<div class="relative z-10">
+<h2 class="font-display-lg text-headline-lg md:text-display-lg mb-12">Ready to create your own <span class="italic">AI Photobooth?</span></h2>
+<p class="font-body-xl text-xl mb-16 opacity-90 max-w-2xl mx-auto">Join the ranks of the world's most innovative studios. Get started in minutes, no credit card required for trial.</p>
+<div class="flex flex-wrap justify-center gap-6">
+<button class="bg-white text-primary px-12 py-6 rounded-full font-bold text-xl hover:scale-110 transition-transform shadow-2xl">Create Your Booth</button>
+<button class="bg-transparent border-2 border-white/40 hover:border-white text-white px-12 py-6 rounded-full font-bold text-xl transition-colors">Book a Demo</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest py-stack-lg border-t border-outline-variant">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop max-w-container-max mx-auto">
+<div class="md:col-span-2">
+<div class="font-display-md text-headline-lg text-primary mb-6">LUMINA AI</div>
+<p class="text-on-surface-variant max-w-sm mb-12">Redefining the boundary between technology and art through generative AI photography experiences.</p>
+<div class="flex gap-6">
+<a class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">share</span></a>
+<a class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">public</span></a>
+<a class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">mail</span></a>
+</div>
+</div>
+<div>
+<h4 class="font-label-caps text-label-caps text-on-surface mb-8">PRODUCT</h4>
+<ul class="space-y-4">
+<li><a class="text-on-surface-variant hover:text-primary transition-all duration-200 hover:translate-x-1 block" href="#">Features</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-all duration-200 hover:translate-x-1 block" href="#">Pricing</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-all duration-200 hover:translate-x-1 block" href="#">Studio Partners</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-all duration-200 hover:translate-x-1 block" href="#">Developer API</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-caps text-label-caps text-on-surface mb-8">RESOURCES</h4>
+<ul class="space-y-4">
+<li><a class="text-on-surface-variant hover:text-primary transition-all duration-200 hover:translate-x-1 block" href="#">Privacy Policy</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-all duration-200 hover:translate-x-1 block" href="#">Terms of Service</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-all duration-200 hover:translate-x-1 block" href="#">Press Kit</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-all duration-200 hover:translate-x-1 block" href="#">Help Center</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-margin-desktop mt-20 pt-10 border-t border-outline-variant text-center md:text-left">
+<p class="text-on-surface-variant font-label-caps text-[10px] opacity-60">© 2024 LUMINA AI PHOTOBOOTH. TECHNOLOGY AS ART.</p>
+</div>
+</footer>
+<script>
+        // Reveal on scroll animation logic
+        const reveals = document.querySelectorAll(".reveal");
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("visible");
+                }
+            });
+        }, { threshold: 0.15 });
+
+        reveals.forEach(el => observer.observe(el));
+
+        // Magnetic button micro-interaction
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                btn.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px) scale(1.02)`;
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = 'translate(0px, 0px) scale(1)';
+            });
+        });
+    </script>
+</body></html>

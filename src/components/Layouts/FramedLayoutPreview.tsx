@@ -108,7 +108,7 @@ export default function FramedLayoutPreview({
         className={`relative rounded-lg overflow-hidden ${wrapperClass} mx-auto ${
           onSlotClick ? "cursor-pointer" : ""
         }`}
-        onClick={() => onSlotClick && onSlotClick(0)}
+        onClick={() => onSlotClick?.(0)}
       >
         <img
           src={previewUrl}

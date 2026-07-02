@@ -1,6 +1,6 @@
 "use client";
 
-import Button from "@/components/UI/Button";
+import Reveal from "@/components/Landing/Reveal";
 import { useAuth } from "@/contexts/AuthContext";
 import { getToken } from "@/services/auth.service";
 import {
@@ -10,8 +10,7 @@ import {
 } from "@/services/framer.service";
 import type { LayoutType } from "@/types/layout";
 import { LAYOUT_CONFIGS } from "@/utils/layout";
-import { motion } from "framer-motion";
-import { Check, Clock, Upload, X } from "lucide-react";
+import { ArrowLeft, Check, Clock, Upload, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -23,9 +22,9 @@ const LAYOUT_OPTIONS: { value: LayoutType; label: string }[] = [
 ];
 
 const STATUS_MAP = {
-  pending: { label: "Chờ duyệt", icon: Clock, color: "text-amber-600" },
-  approved: { label: "Đã duyệt", icon: Check, color: "text-emerald-600" },
-  rejected: { label: "Đã từ chối", icon: X, color: "text-red-600" },
+  pending: { label: "Chờ duyệt", icon: Clock, color: "text-secondary" },
+  approved: { label: "Đã duyệt", icon: Check, color: "text-primary" },
+  rejected: { label: "Đã từ chối", icon: X, color: "text-error" },
 };
 
 export default function ContributeFramePage() {
@@ -124,12 +123,8 @@ export default function ContributeFramePage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-[50vh] flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          className="w-10 h-10 rounded-full border-2 border-purple-500 border-t-transparent"
-        />
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="w-10 h-10 rounded-full border-2 border-primary border-t-transparent animate-spin" />
       </div>
     );
   }
@@ -137,126 +132,148 @@ export default function ContributeFramePage() {
   if (!user) return null;
 
   return (
-    <div className="min-h-[60vh] bg-gradient-to-b from-slate-50/70 via-white/80 to-purple-50/25">
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Link
-          href="/frames"
-          className="text-sm text-slate-600 hover:text-purple-600 mb-4 inline-block"
-        >
-          ← Quay lại Khung ảnh
-        </Link>
-        <h1 className="text-2xl font-bold text-slate-800 mb-2">Đóng góp khung ảnh</h1>
-        <p className="text-slate-600 text-sm mb-6">
+    <div className="w-full max-w-2xl mx-auto px-6 md:px-margin-desktop py-8 md:py-stack-md">
+      <Link
+        href="/frames"
+        className="inline-flex items-center gap-2 text-sm text-on-surface-variant hover:text-primary mb-6 transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        Quay lại thư viện khung
+      </Link>
+
+      <Reveal>
+        <span className="font-body text-label-caps tracking-[0.2em] uppercase text-primary mb-2 block">
+          Cộng đồng
+        </span>
+        <h1 className="font-display text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2">
+          Đóng góp khung ảnh
+        </h1>
+        <p className="text-on-surface-variant text-body-md mb-8">
           Gửi khung của bạn. Admin sẽ xem xét và duyệt trước khi khung xuất hiện trong danh sách.
         </p>
+      </Reveal>
 
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4"
-        >
+      <Reveal>
+        <div className="frames-glass-card rounded-[32px] p-6 md:p-8 space-y-5">
           <label className="block">
-            <span className="text-sm font-medium text-slate-700">Tên khung</span>
+            <span className="text-sm font-semibold text-on-surface">Tên khung</span>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="VD: Khung Valentine"
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500"
+              className="mt-2 w-full rounded-2xl border border-outline-variant bg-surface-container-low px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
             />
           </label>
+
           <label className="block">
-            <span className="text-sm font-medium text-slate-700">Layout</span>
-            <select
-              value={layoutType}
-              onChange={(e) => setLayoutType(e.target.value as LayoutType)}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500"
-            >
+            <span className="text-sm font-semibold text-on-surface">Layout</span>
+            <div className="mt-2 flex flex-wrap gap-2">
               {LAYOUT_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label} – {LAYOUT_CONFIGS[opt.value].description}
-                </option>
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => setLayoutType(opt.value)}
+                  className={`category-pill px-6 py-2.5 rounded-full font-body text-label-caps tracking-widest uppercase border border-outline-variant/30 ${
+                    layoutType === opt.value
+                      ? "active"
+                      : "bg-white/60 hover:border-primary/50"
+                  }`}
+                >
+                  {opt.label}
+                </button>
               ))}
-            </select>
+            </div>
+            <p className="mt-2 text-xs text-on-surface-variant">
+              {LAYOUT_CONFIGS[layoutType].description}
+            </p>
           </label>
+
           <label className="block">
-            <span className="text-sm font-medium text-slate-700">Link ảnh (tùy chọn)</span>
+            <span className="text-sm font-semibold text-on-surface">Link ảnh (tùy chọn)</span>
             <input
               type="url"
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
               placeholder="https://..."
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500"
+              className="mt-2 w-full rounded-2xl border border-outline-variant bg-surface-container-low px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
             />
           </label>
+
           <label className="block">
-            <span className="text-sm font-medium text-slate-700">Hoặc chọn file ảnh</span>
+            <span className="text-sm font-semibold text-on-surface">Hoặc chọn file ảnh</span>
             <input
               type="file"
               accept="image/*"
               onChange={(e) => setImageFromFile(e.target.files?.[0] ?? null)}
-              className="mt-1 w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-purple-50 file:px-3 file:py-2 file:text-purple-700"
+              className="mt-2 w-full text-sm text-on-surface-variant file:mr-3 file:rounded-full file:border-0 file:bg-primary/10 file:px-4 file:py-2 file:text-primary file:font-medium"
             />
           </label>
+
           {preview && (
-            <div className="rounded-lg border border-slate-200 p-2 bg-slate-50">
-              <img src={preview} alt="Preview" className="max-h-40 mx-auto object-contain" />
+            <div className="rounded-[20px] border border-outline-variant p-4 bg-surface-container">
+              <img src={preview} alt="Preview" className="max-h-48 mx-auto object-contain" />
             </div>
           )}
-          {error && <p className="text-sm text-red-600">{error}</p>}
-          <Button
+
+          {error && (
+            <p className="text-sm text-error bg-error-container/20 rounded-xl px-4 py-3">{error}</p>
+          )}
+
+          <button
+            type="button"
             onClick={handleSubmit}
             disabled={(!preview && !imageUrl.trim()) || submitting}
-            className="w-full"
+            className="w-full inline-flex items-center justify-center gap-2 primary-glow-button text-white px-6 py-4 rounded-full font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
-            <Upload className="w-4 h-4 mr-2" />
+            <Upload className="w-4 h-4" />
             {submitting ? "Đang gửi..." : "Gửi yêu cầu đóng góp"}
-          </Button>
-        </motion.div>
-
-        <div className="mt-8">
-          <h2 className="text-lg font-semibold text-slate-800 mb-3">Yêu cầu của tôi</h2>
-          {loadingList ? (
-            <p className="text-slate-500 text-sm">Đang tải...</p>
-          ) : contributions.length === 0 ? (
-            <p className="text-slate-500 text-sm">Chưa có yêu cầu nào.</p>
-          ) : (
-            <ul className="space-y-3">
-              {contributions.map((c) => {
-                const statusInfo = STATUS_MAP[c.status];
-                const Icon = statusInfo.icon;
-                return (
-                  <li
-                    key={c.id}
-                    className="flex items-center gap-4 bg-white rounded-xl border border-slate-200 p-4"
-                  >
-                    <div className="w-16 h-16 rounded-lg bg-slate-100 flex-shrink-0 overflow-hidden">
-                      {c.imageUrl && (
-                        <img
-                          src={c.imageUrl}
-                          alt={c.name}
-                          className="w-full h-full object-contain"
-                          referrerPolicy="no-referrer"
-                        />
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-slate-800 truncate">{c.name}</p>
-                      <p className="text-xs text-slate-500">
-                        {LAYOUT_CONFIGS[c.layoutType as LayoutType]?.name ?? c.layoutType}
-                      </p>
-                    </div>
-                    <span className={`flex items-center gap-1 text-sm ${statusInfo.color}`}>
-                      <Icon className="w-4 h-4" />
-                      {statusInfo.label}
-                    </span>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
+          </button>
         </div>
-      </div>
+      </Reveal>
+
+      <section className="mt-10">
+        <h2 className="font-display text-2xl text-on-surface mb-4">Yêu cầu của tôi</h2>
+        {loadingList ? (
+          <p className="text-on-surface-variant text-sm">Đang tải...</p>
+        ) : contributions.length === 0 ? (
+          <p className="text-on-surface-variant text-sm">Chưa có yêu cầu nào.</p>
+        ) : (
+          <ul className="space-y-3">
+            {contributions.map((c) => {
+              const statusInfo = STATUS_MAP[c.status];
+              const Icon = statusInfo.icon;
+              return (
+                <li
+                  key={c.id}
+                  className="frames-glass-card rounded-[24px] p-4 flex items-center gap-4"
+                >
+                  <div className="w-16 h-16 rounded-2xl bg-surface-container flex-shrink-0 overflow-hidden">
+                    {c.imageUrl && (
+                      <img
+                        src={c.imageUrl}
+                        alt={c.name}
+                        className="w-full h-full object-contain"
+                        referrerPolicy="no-referrer"
+                      />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-on-surface truncate">{c.name}</p>
+                    <p className="text-xs text-on-surface-variant mt-0.5">
+                      {LAYOUT_CONFIGS[c.layoutType as LayoutType]?.name ?? c.layoutType}
+                    </p>
+                  </div>
+                  <span className={`flex items-center gap-1 text-sm shrink-0 ${statusInfo.color}`}>
+                    <Icon className="w-4 h-4" />
+                    {statusInfo.label}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </section>
     </div>
   );
 }

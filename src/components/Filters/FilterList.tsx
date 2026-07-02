@@ -7,7 +7,23 @@ import { Camera, Snowflake } from "lucide-react";
 interface FilterListProps {
   selectedFilter: FilterType;
   onFilterSelect: (filter: FilterType) => void;
+  variant?: "default" | "studio";
 }
+
+const STUDIO_GRADIENTS: Partial<Record<FilterType, string>> = {
+  none: "from-slate-600 to-slate-900",
+  beauty: "from-pink-400 to-rose-600",
+  "skin-whiten": "from-rose-100 to-pink-300",
+  "skin-smooth": "from-amber-100 to-orange-200",
+  portrait: "from-violet-400 to-purple-700",
+  vibrant: "from-cyan-400 via-fuchsia-500 to-orange-400",
+  warm: "from-orange-400 to-red-600",
+  cool: "from-blue-400 to-cyan-600",
+  cinematic: "from-slate-700 via-purple-900 to-black",
+  grayscale: "from-gray-400 to-gray-800",
+  sepia: "from-amber-700 to-yellow-900",
+  vintage: "from-amber-600 to-stone-800",
+};
 
 const filters: { value: FilterType; label: string; icon: string | React.ComponentType<{ className?: string }>; category: "beauty" | "color" | "basic" }[] = [
   { value: "none", label: "Gốc", icon: Camera, category: "basic" },
@@ -27,10 +43,43 @@ const filters: { value: FilterType; label: string; icon: string | React.Componen
 export default function FilterList({
   selectedFilter,
   onFilterSelect,
+  variant = "default",
 }: FilterListProps) {
   const beautyFilters = filters.filter(f => f.category === "beauty");
   const colorFilters = filters.filter(f => f.category === "color");
   const basicFilters = filters.filter(f => f.category === "basic");
+
+  if (variant === "studio") {
+    return (
+      <div className="flex flex-col gap-3">
+        {filters.map((filter) => {
+          const isActive = selectedFilter === filter.value;
+          const gradient = STUDIO_GRADIENTS[filter.value] ?? "from-primary/60 to-tertiary/60";
+          return (
+            <motion.button
+              key={filter.value}
+              type="button"
+              onClick={() => onFilterSelect(filter.value)}
+              className={`relative w-full rounded-xl overflow-hidden text-left transition-all ${
+                isActive ? "filter-studio-active" : "border border-white/10 hover:border-white/20"
+              }`}
+              whileTap={{ scale: 0.97 }}
+            >
+              <div className={`h-14 bg-gradient-to-br ${gradient} opacity-90`} />
+              <div className="absolute inset-0 flex items-end p-2 bg-gradient-to-t from-black/70 to-transparent">
+                <span className="text-[11px] font-semibold tracking-wide uppercase text-white/90">
+                  {filter.label}
+                </span>
+              </div>
+              {isActive && (
+                <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(107,56,212,0.8)]" />
+              )}
+            </motion.button>
+          );
+        })}
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-gray-200 shadow-lg">

@@ -1,0 +1,365 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Aura Studio | Live Capture</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#d23284",
+                        "on-primary": "#ffffff",
+                        "background": "#0c0a0f", // Darkened for "Dark Cinematic Studio"
+                        "surface-container-lowest": "#121016",
+                        "surface": "#0c0a0f",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#ffd07d",
+                        "surface-container": "#1d1a23",
+                        "surface-bright": "#1d1a23",
+                        "primary": "#6b38d4",
+                        "secondary": "#7a580f",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#2b2733",
+                        "secondary-fixed": "#ffdea8",
+                        "tertiary-fixed": "#ffd9e4",
+                        "on-secondary-fixed-variant": "#5e4200",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#e9ddff",
+                        "on-secondary-fixed": "#271900",
+                        "surface-tint": "#6d3bd7",
+                        "on-error-container": "#93000a",
+                        "outline": "#7b7486",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#fffbff",
+                        "primary-fixed-dim": "#d0bcff",
+                        "inverse-on-surface": "#f5eefb",
+                        "surface-container-high": "#221f28",
+                        "surface-dim": "#15131a",
+                        "on-tertiary-fixed-variant": "#8c0053",
+                        "tertiary-fixed-dim": "#ffb0cd",
+                        "inverse-surface": "#fef7ff",
+                        "surface-variant": "#2b2733",
+                        "secondary-fixed-dim": "#edc06e",
+                        "on-background": "#fef7ff",
+                        "tertiary": "#b10e6b",
+                        "primary-container": "#8455ef",
+                        "on-primary-fixed": "#23005c",
+                        "on-surface-variant": "#cbc3d7",
+                        "on-surface": "#fef7ff",
+                        "outline-variant": "#494454",
+                        "on-primary-container": "#fffbff",
+                        "on-tertiary-fixed": "#3e0022",
+                        "inverse-primary": "#d0bcff",
+                        "surface-container-low": "#18151d",
+                        "on-primary-fixed-variant": "#5516be",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#79570e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "3xl": "32px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "stack-md": "48px",
+                        "margin-desktop": "64px",
+                        "stack-sm": "24px",
+                        "stack-lg": "80px",
+                        "gutter": "32px",
+                        "margin-mobile": "24px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "body-xl": ["Inter"],
+                        "headline-lg": ["Playfair Display"],
+                        "display-lg": ["Playfair Display"],
+                        "display-md": ["Playfair Display"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                        "body-xl": ["20px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-lg": ["40px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "display-lg": ["80px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "display-md": ["56px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #0c0a0f;
+            overflow: hidden;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.3);
+        }
+        .shimmer-bg {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .capture-button-ring {
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2), 0 0 20px rgba(107, 56, 212, 0.4);
+        }
+        .filter-active {
+            border: 2px solid #6b38d4;
+            transform: scale(1.05);
+        }
+        .photo-slot {
+            aspect-ratio: 4/5;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .particle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.2;
+            animation: float 20s infinite linear;
+        }
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+        .countdown-text {
+            text-shadow: 0 0 30px rgba(107, 56, 212, 0.8);
+        }
+    </style>
+</head>
+<body class="text-on-surface font-body-md bg-surface-dim">
+<!-- Atmospheric Particles -->
+<div class="fixed inset-0 z-0 opacity-30" id="particles-container"><div class="particle" style="width: 1.38066px; height: 1.38066px; left: 5.90389%; top: 77.9513%; animation-delay: 3.02826s; animation-duration: 16.8183s;"></div><div class="particle" style="width: 1.30295px; height: 1.30295px; left: 2.66107%; top: 1.00448%; animation-delay: 18.2488s; animation-duration: 26.124s;"></div><div class="particle" style="width: 1.78506px; height: 1.78506px; left: 7.94306%; top: 93.4903%; animation-delay: 6.44989s; animation-duration: 25.7588s;"></div><div class="particle" style="width: 2.74394px; height: 2.74394px; left: 29.4475%; top: 52.1201%; animation-delay: 18.8348s; animation-duration: 28.4991s;"></div><div class="particle" style="width: 1.74327px; height: 1.74327px; left: 33.1872%; top: 65.3562%; animation-delay: 9.19578s; animation-duration: 15.2197s;"></div><div class="particle" style="width: 1.38985px; height: 1.38985px; left: 95.9593%; top: 46.8201%; animation-delay: 15.4735s; animation-duration: 19.0347s;"></div><div class="particle" style="width: 2.47369px; height: 2.47369px; left: 70.799%; top: 65.2862%; animation-delay: 14.1653s; animation-duration: 21.5691s;"></div><div class="particle" style="width: 2.21389px; height: 2.21389px; left: 10.6456%; top: 52.796%; animation-delay: 6.41874s; animation-duration: 16.5482s;"></div><div class="particle" style="width: 1.64156px; height: 1.64156px; left: 93.0165%; top: 83.5335%; animation-delay: 5.91167s; animation-duration: 29.197s;"></div><div class="particle" style="width: 3.96592px; height: 3.96592px; left: 24.8424%; top: 49.6315%; animation-delay: 17.2839s; animation-duration: 16.7334s;"></div><div class="particle" style="width: 3.15592px; height: 3.15592px; left: 98.5034%; top: 60.3876%; animation-delay: 5.47161s; animation-duration: 21.0363s;"></div><div class="particle" style="width: 1.62854px; height: 1.62854px; left: 59.1175%; top: 33.4925%; animation-delay: 6.57265s; animation-duration: 29.6543s;"></div><div class="particle" style="width: 1.87632px; height: 1.87632px; left: 6.10236%; top: 16.2179%; animation-delay: 4.51098s; animation-duration: 25.7733s;"></div><div class="particle" style="width: 3.89904px; height: 3.89904px; left: 20.0924%; top: 27.5601%; animation-delay: 10.3418s; animation-duration: 25.4867s;"></div><div class="particle" style="width: 2.56225px; height: 2.56225px; left: 19.1554%; top: 3.15949%; animation-delay: 10.0833s; animation-duration: 26.8598s;"></div><div class="particle" style="width: 1.79956px; height: 1.79956px; left: 71.8401%; top: 58.4406%; animation-delay: 0.77129s; animation-duration: 29.1591s;"></div><div class="particle" style="width: 1.11482px; height: 1.11482px; left: 55.2418%; top: 25.315%; animation-delay: 11.7097s; animation-duration: 15.7143s;"></div><div class="particle" style="width: 3.77825px; height: 3.77825px; left: 11.6604%; top: 35.5656%; animation-delay: 3.72058s; animation-duration: 19.9047s;"></div><div class="particle" style="width: 1.92447px; height: 1.92447px; left: 6.95273%; top: 82.997%; animation-delay: 14.1049s; animation-duration: 27.1092s;"></div><div class="particle" style="width: 1.10252px; height: 1.10252px; left: 32.4438%; top: 74.0297%; animation-delay: 5.34443s; animation-duration: 25.3858s;"></div><div class="particle" style="width: 2.62541px; height: 2.62541px; left: 43.731%; top: 48.5342%; animation-delay: 0.38811s; animation-duration: 15.0928s;"></div><div class="particle" style="width: 3.65277px; height: 3.65277px; left: 34.9778%; top: 60.4731%; animation-delay: 15.4033s; animation-duration: 18.0446s;"></div><div class="particle" style="width: 1.99729px; height: 1.99729px; left: 96.535%; top: 72.6732%; animation-delay: 10.0482s; animation-duration: 19.1903s;"></div><div class="particle" style="width: 3.9561px; height: 3.9561px; left: 55.7604%; top: 41.3442%; animation-delay: 8.4508s; animation-duration: 26.4268s;"></div><div class="particle" style="width: 1.68122px; height: 1.68122px; left: 99.5989%; top: 72.3574%; animation-delay: 16.5147s; animation-duration: 27.9658s;"></div><div class="particle" style="width: 3.3446px; height: 3.3446px; left: 58.9054%; top: 80.6926%; animation-delay: 7.98015s; animation-duration: 21.8832s;"></div><div class="particle" style="width: 2.04099px; height: 2.04099px; left: 48.8262%; top: 62.2453%; animation-delay: 1.80184s; animation-duration: 15.7709s;"></div><div class="particle" style="width: 2.13923px; height: 2.13923px; left: 76.4707%; top: 33.1381%; animation-delay: 16.0997s; animation-duration: 22.2465s;"></div><div class="particle" style="width: 3.90374px; height: 3.90374px; left: 96.5326%; top: 3.65305%; animation-delay: 13.0597s; animation-duration: 29.206s;"></div><div class="particle" style="width: 3.34399px; height: 3.34399px; left: 13.2885%; top: 74.771%; animation-delay: 10.67s; animation-duration: 29.32s;"></div></div>
+<!-- Background Gradients -->
+<div class="fixed top-[-10%] right-[-10%] w-[50%] h-[50%] bg-primary/30 blur-[120px] rounded-full pointer-events-none"></div>
+<div class="fixed bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-tertiary/20 blur-[100px] rounded-full pointer-events-none"></div>
+<!-- Top Navigation Bar (Shared Component Reference) -->
+<header class="fixed top-0 w-full z-50 bg-surface-container-low/80 backdrop-blur-xl border-b border-outline-variant/20 flex justify-between items-center px-margin-desktop py-4 max-w-container-max mx-auto">
+<div class="font-headline-lg text-[24px] font-bold tracking-tighter text-on-surface">
+            Aura <span class="text-primary">Studio</span>
+</div>
+<div class="flex gap-8 items-center">
+<nav class="hidden md:flex gap-8">
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-label-caps text-label-caps" href="#">Platform</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-label-caps text-label-caps" href="#">Gallery</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-label-caps text-label-caps" href="#">Studio</a>
+</nav>
+<div class="flex gap-4 items-center">
+<span class="material-symbols-outlined text-[20px] cursor-pointer hover:text-primary transition-colors">account_circle</span>
+<button class="bg-primary hover:scale-105 transition-all text-white px-6 py-2 rounded-full font-label-caps text-[12px]">Get Started</button>
+</div>
+</div>
+</header>
+<main class="relative h-screen pt-24 pb-32 px-margin-desktop grid grid-cols-12 gap-gutter z-10">
+<!-- Left: Photo Strip -->
+<aside class="col-span-2 flex flex-col gap-4 self-center h-full max-h-[70vh] justify-center">
+<div class="font-label-caps text-label-caps text-on-surface-variant mb-2">PHOTO STRIP</div>
+<div class="flex flex-col gap-4 overflow-y-auto pr-4 custom-scrollbar">
+<div class="photo-slot rounded-xl glass-panel relative group overflow-hidden bg-surface-container-highest" style="transform: translate(0.553125px, 1.87109px);">
+<img class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" data-alt="A high-fashion black and white studio portrait of a woman with dramatic shadows, captured in the 'Noir' style of Aura Studio." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUH6jhJK5n6705_2nnWmexvqUcqFsdGJLuH6WDK0VdAm9rPxcFTyDwsB9UkkB4GSfDEYlouqtbWtGLU8HsABSb8xNDPA75j1GEkyeUXBMpKezgGW9EatEqB_WrzO5bPjXY_QFQEfeKx3gKBkwCDvcvBLMVhB2qLKHr1ff40Kwz8XZK1EhkEfidGRVXqhEF0YtLmkI0bTw4bWOVrRL53ntVqAxlsCzuDAy69xkDaqvOPQcg_VmF38149uOi_tPrwzoF0F86PKd9NhI">
+<div class="absolute inset-0 border-2 border-white/10 rounded-xl"></div>
+</div>
+<div class="photo-slot rounded-xl glass-panel relative flex items-center justify-center border-dashed border-2 border-white/10 group overflow-hidden bg-surface-container" style="transform: translate(0.553125px, 1.87109px);">
+<div class="shimmer-bg absolute inset-0"></div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">photo_camera</span>
+</div>
+<div class="photo-slot rounded-xl glass-panel relative flex items-center justify-center border-dashed border-2 border-white/10" style="transform: translate(0.553125px, 1.87109px);">
+<span class="material-symbols-outlined text-outline-variant/30">add</span>
+</div>
+<div class="photo-slot rounded-xl glass-panel relative flex items-center justify-center border-dashed border-2 border-white/10" style="transform: translate(0.553125px, 1.87109px);">
+<span class="material-symbols-outlined text-outline-variant/30">add</span>
+</div>
+</div>
+</aside>
+<!-- Center: Live Camera Preview -->
+<section class="col-span-8 flex flex-col items-center justify-center relative">
+<div class="relative w-full aspect-video max-h-[65vh] glass-panel rounded-3xl overflow-hidden border-2 border-white/10 group shadow-2xl" style="transform: translate(0.553125px, 1.87109px);">
+<!-- Shimmer Overlay for "AI Processing" -->
+<div class="absolute inset-0 bg-black/40 backdrop-blur-sm z-30 flex flex-col items-center justify-center gap-4 opacity-0 pointer-events-none transition-opacity duration-500" id="processing-overlay">
+<div class="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+<p class="font-label-caps text-label-caps text-white tracking-widest">ENHANCING WITH LUMINA AI...</p>
+<div class="w-64 h-1 bg-white/10 rounded-full overflow-hidden">
+<div class="h-full bg-primary animate-[shimmer_2s_infinite]" style="width: 60%"></div>
+</div>
+</div>
+<!-- Live Feed Simulation -->
+<div class="absolute inset-0 bg-[#1a181d]">
+<img class="w-full h-full object-cover opacity-90 scale-105 group-hover:scale-100 transition-transform duration-1000" data-alt="Cinematic wide shot of a futuristic photo studio environment with soft purple neon lighting and a high-end camera lens view, mimicking a professional Lumina AI live preview screen." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdgjn-ZpGx-zf_3AREEnD9K2sUzQZp5tS_z393dDRR_SgUelVop98gY8WBpOGfP02HAeQpgFZI2RpX4xiByY-vqI3cfWbpNB4bNSInfYyawN1EHQfZudgE4a3ffzrnrTxwxf9GCJDSCpOvgJo_2_B3-aqubKuEVDuSgAXMltAx2oSfEFTv989RRnPYz6ME7lMJ14FCuevgGyXkfi-dInEumv4L-EHMjFE5o6vc-6-5QEklyExl0eEzTAQMMwgQLb203Twup3Gn5so">
+</div>
+<!-- Countdown Overlay -->
+<div class="absolute inset-0 z-20 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300" id="countdown">
+<span class="font-display-lg text-[200px] text-white countdown-text">3</span>
+</div>
+<!-- Corner Decor -->
+<div class="absolute top-8 left-8 flex items-center gap-2 px-3 py-1 bg-black/40 backdrop-blur-md rounded-full border border-white/10">
+<div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+<span class="font-label-caps text-[10px] text-white">LIVE 4K</span>
+</div>
+<div class="absolute top-8 right-8 text-white/40">
+<span class="material-symbols-outlined">grid_4x4</span>
+</div>
+</div>
+<!-- Status Indicator -->
+<div class="mt-8 flex items-center gap-6 bg-surface-container-high/90 backdrop-blur-md px-8 py-3 rounded-full border border-outline-variant/20" style="transform: translate(0.553125px, 1.87109px);">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">bolt</span>
+<span class="font-label-caps text-[11px] text-on-surface">AI READY</span>
+</div>
+<div class="w-[1px] h-4 bg-white/10"></div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-container text-[18px]">timer</span>
+<span class="font-label-caps text-[11px] text-on-surface">3s DELAY</span>
+</div>
+<div class="w-[1px] h-4 bg-white/10"></div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">memory</span>
+<span class="font-label-caps text-[11px] text-on-surface">VIVID ENGINE</span>
+</div>
+</div>
+</section>
+<!-- Right: Filters List -->
+<aside class="col-span-2 flex flex-col gap-4 self-center h-full max-h-[70vh] justify-center items-end">
+<div class="font-label-caps text-label-caps text-on-surface-variant mb-2 text-right">AI FILTERS</div>
+<div class="flex flex-col gap-4 overflow-y-auto pl-4 items-end">
+<button class="filter-active group relative w-32 aspect-square rounded-2xl overflow-hidden glass-panel transition-all hover:scale-105" style="transform: translate(0.553125px, 1.87109px);">
+<img class="w-full h-full object-cover" data-alt="A vibrant, high-saturation fashion portrait focusing on warm skin tones and electric blue backgrounds, representing the 'Vivid' AI filter style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmCNSXHHSJnoGwSORe_BbZSj4CKExGIe6OJYAWPifDfL7ELNm26HZBFicgoKkUwtt84-0Rs7aD9WUjiq2poq-6DYbVTjOmn6PpAL8eYm89dJGTY-CtLU-WwNgCeIVAclK2s1f_PkjDCnH6ikPOwV8ENgrKIC_hppEFXL0Tb6hYscADRGnX7jOdbhwbe3GsY1W_Di5Zow_As4FeeffuoZAThGPjcrF8Jg-wVYYtiW7KYHWEQEQhMnFbCAT53yU_zZSimzfnk4eaEoE">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+<span class="absolute bottom-2 left-0 right-0 font-label-caps text-[10px] text-white">VIVID</span>
+</button>
+<button class="group relative w-32 aspect-square rounded-2xl overflow-hidden glass-panel transition-all hover:scale-105" style="transform: translate(0.553125px, 1.87109px);">
+<img class="w-full h-full object-cover" data-alt="A moody, high-contrast monochrome studio photo with soft grain and professional studio lighting, representing the 'Noir' AI filter style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBchmCGCCx3A3MyIJThfvqhsAsPDKTSlC6na76T5KdCMbPShyMRAPTkp4RoR_t4RzggeB1rBRv00hAwqqkZTaPqMNmbxtklp0qacxWWCx9xfhdRY0psE0MNKSGUt8t4AmxRvXwOYxsHIqotXaS8kDYqIZQ3fMuAw3xWd5iFLlwK0cs7IkUxisbbmbCiQDQccJPeHJtqqVk6Txr1Unlx8uZJg4cRPXKUBmluwFxOab49mNIWXWMbBmGzoCrr8Ly9RWZf9cdEK-6j4cI">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+<span class="absolute bottom-2 left-0 right-0 font-label-caps text-[10px] text-white">NOIR</span>
+</button>
+<button class="group relative w-32 aspect-square rounded-2xl overflow-hidden glass-panel transition-all hover:scale-105" style="transform: translate(0.553125px, 1.87109px);">
+<img class="w-full h-full object-cover" data-alt="A soft-focus dreamlike portrait with pastel color grading and delicate rim lighting, representing the 'Studio' AI filter style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQE4n06sXQD3K8O5i9cAdDntCfEbur-YijrzRsXZ4vQ_bHU_BnejtVtNLP99KuE3mL6SF3e6rmEQIujK6r9dRvw1JhuxrErdsQGcE5hSEkbU2g8FsW97kgs2QFdfWDP7HFuYXq3eBUbTHNzgylXa0K11PoWexcySO127KqrCmvzq9ai_vUA6wQ62eGONlH27ROW3daKX9UyaUC_um2-FXiraKMhSW_40CHje8v65cPXLpmTa9KlegAdH0l_6Jtc_nnoBTlrP8qZ0s">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+<span class="absolute bottom-2 left-0 right-0 font-label-caps text-[10px] text-white">STUDIO</span>
+</button>
+<button class="group relative w-32 aspect-square rounded-2xl overflow-hidden glass-panel transition-all hover:scale-105" style="transform: translate(0.553125px, 1.87109px);">
+<img class="w-full h-full object-cover" data-alt="Vintage 35mm film aesthetic photo with authentic grain, slight chromatic aberration, and warm nostalgic tones, representing the 'Film' AI filter style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_DjkasUlteH9CignfUup93OqEXuYc0sr0SOfNSWyL_fcIsxVxqsL6h_yTx0XQ_tRJG3RppwWBPWyxbs7539iJ_gTXSXJ8gFc6gFshN1ZaO4b4fuzz-knxGwuAYONJxgbl5PRvKmodcIg8Z_8ZCIWDIiiI4Wjv3vp0769BK2oqaqkwi3tnZ5wicbDGVKDjKjLGEWAVdp-av13Yj_XdQWHOeA-lxncOsTVzgdDQtu2UFxUfPr20b9SDGkbzs5725uQN6Vxcm-B5xAQ">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+<span class="absolute bottom-2 left-0 right-0 font-label-caps text-[10px] text-white">FILM</span>
+</button>
+</div>
+</aside>
+</main>
+<!-- Bottom Control Bar -->
+<footer class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
+<div class="bg-surface-container-highest/95 backdrop-blur-xl px-10 py-6 rounded-full flex items-center gap-12 border border-outline-variant/30 shadow-2xl" style="transform: translate(0.553125px, 1.87109px);">
+<button class="p-4 rounded-full text-on-surface-variant hover:text-white hover:bg-white/5 transition-all">
+<span class="material-symbols-outlined text-[28px]">flip_camera_ios</span>
+</button>
+<button class="p-4 rounded-full text-on-surface-variant hover:text-white hover:bg-white/5 transition-all">
+<span class="material-symbols-outlined text-[28px]">timer</span>
+</button>
+<!-- Main Capture Button -->
+<button class="relative group" id="capture-btn">
+<div class="absolute -inset-4 bg-primary/20 blur-xl rounded-full group-hover:bg-primary/40 transition-all"></div>
+<div class="relative w-20 h-20 bg-white rounded-full flex items-center justify-center capture-button-ring group-active:scale-90 transition-transform">
+<div class="w-16 h-16 border-2 border-background rounded-full"></div>
+</div>
+</button>
+<button class="p-4 rounded-full text-on-surface-variant hover:text-white hover:bg-white/5 transition-all">
+<span class="material-symbols-outlined text-[28px]">flash_on</span>
+</button>
+<button class="p-4 rounded-full text-on-surface-variant hover:text-white hover:bg-white/5 transition-all">
+<span class="material-symbols-outlined text-[28px]">settings</span>
+</button>
+</div>
+</footer>
+<script>
+        // Particle background generation
+        const container = document.getElementById('particles-container');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            const size = Math.random() * 3 + 1;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.animationDelay = `${Math.random() * 20}s`;
+            particle.style.animationDuration = `${15 + Math.random() * 15}s`;
+            container.appendChild(particle);
+        }
+
+        // Simple capture interaction logic
+        const captureBtn = document.getElementById('capture-btn');
+        const countdownEl = document.getElementById('countdown');
+        const countdownText = countdownEl.querySelector('span');
+        const processingOverlay = document.getElementById('processing-overlay');
+
+        captureBtn.addEventListener('click', () => {
+            let count = 3;
+            countdownEl.style.opacity = '1';
+            countdownText.innerText = count;
+
+            const timer = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    countdownText.innerText = count;
+                    countdownText.style.transform = 'scale(1.5)';
+                    setTimeout(() => countdownText.style.transform = 'scale(1)', 100);
+                } else {
+                    clearInterval(timer);
+                    countdownEl.style.opacity = '0';
+                    flashEffect();
+                }
+            }, 1000);
+        });
+
+        function flashEffect() {
+            // Flash simulation
+            const flash = document.createElement('div');
+            flash.className = 'fixed inset-0 bg-white z-[60] opacity-100 transition-opacity duration-300';
+            document.body.appendChild(flash);
+            
+            setTimeout(() => {
+                flash.style.opacity = '0';
+                setTimeout(() => flash.remove(), 300);
+                showProcessing();
+            }, 50);
+        }
+
+        function showProcessing() {
+            processingOverlay.style.opacity = '1';
+            processingOverlay.style.pointerEvents = 'auto';
+            
+            setTimeout(() => {
+                processingOverlay.style.opacity = '0';
+                processingOverlay.style.pointerEvents = 'none';
+                // Trigger success visual here if needed
+            }, 3000);
+        }
+
+        // Subtle parallax on mouse move
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 20;
+            const y = (e.clientY / window.innerHeight - 0.5) * 20;
+            document.querySelectorAll('.glass-panel').forEach(panel => {
+                panel.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+            });
+        });
+    </script>
+
+
+</body></html>

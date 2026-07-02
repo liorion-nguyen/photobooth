@@ -6,14 +6,61 @@ import type { LayoutState } from "@/types/layout";
 interface LayoutPreviewCompactProps {
   layoutState: LayoutState;
   onSlotClick?: (slotIndex: number) => void;
+  variant?: "default" | "studio";
 }
 
 export default function LayoutPreviewCompact({
   layoutState,
   onSlotClick,
+  variant = "default",
 }: LayoutPreviewCompactProps) {
   const { config, slots } = layoutState;
   const capturedCount = slots.filter((s) => s.captured).length;
+
+  if (variant === "studio") {
+    return (
+      <div className="flex flex-col gap-2">
+        {slots.map((slot, index) => (
+          <motion.button
+            key={slot.id}
+            type="button"
+            onClick={() => onSlotClick?.(index)}
+            className={`photo-slot-studio relative w-full rounded-xl overflow-hidden border ${
+              slot.captured
+                ? "border-primary/50"
+                : index === layoutState.currentSlotIndex
+                ? "border-primary border-dashed"
+                : "border-white/10 border-dashed"
+            } ${onSlotClick ? "cursor-pointer hover:border-primary/70" : ""}`}
+            whileTap={onSlotClick ? { scale: 0.98 } : {}}
+          >
+            {slot.image ? (
+              <img
+                src={slot.image}
+                alt={`Ảnh ${slot.id + 1}`}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full min-h-[72px] flex items-center justify-center bg-white/5">
+                <span
+                  className={`text-sm font-display ${
+                    index === layoutState.currentSlotIndex
+                      ? "text-primary"
+                      : "text-white/30"
+                  }`}
+                >
+                  {slot.id + 1}
+                </span>
+              </div>
+            )}
+            {index === layoutState.currentSlotIndex && !slot.captured && (
+              <div className="absolute inset-0 border-2 border-primary/60 border-dashed animate-pulse rounded-xl pointer-events-none" />
+            )}
+          </motion.button>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-3 shadow-sm">

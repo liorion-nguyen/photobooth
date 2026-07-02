@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumina AI - Choose Your Layout</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#fef7ff",
+                        "surface-bright": "#fef7ff",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#ffd9e4",
+                        "surface-dim": "#ded7e4",
+                        "surface": "#fef7ff",
+                        "surface-container": "#f3ebf8",
+                        "primary-fixed-dim": "#d0bcff",
+                        "inverse-primary": "#d0bcff",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#7a580f",
+                        "secondary-fixed-dim": "#edc06e",
+                        "on-secondary-container": "#79570e",
+                        "inverse-on-surface": "#f5eefb",
+                        "inverse-surface": "#322f39",
+                        "on-tertiary-container": "#fffbff",
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#cbc3d7",
+                        "primary-fixed": "#e9ddff",
+                        "secondary-fixed": "#ffdea8",
+                        "on-tertiary-fixed-variant": "#8c0053",
+                        "on-tertiary-fixed": "#3e0022",
+                        "on-surface": "#1d1a23",
+                        "on-error": "#ffffff",
+                        "outline": "#7b7486",
+                        "primary": "#6b38d4",
+                        "surface-tint": "#6d3bd7",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#5e4200",
+                        "surface-container-low": "#f8f1fe",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#d23284",
+                        "surface-container-high": "#ede5f3",
+                        "primary-container": "#8455ef",
+                        "on-primary-fixed-variant": "#5516be",
+                        "on-secondary-fixed": "#271900",
+                        "on-primary-container": "#fffbff",
+                        "on-background": "#1d1a23",
+                        "tertiary": "#b10e6b",
+                        "surface-variant": "#e7e0ed",
+                        "secondary-container": "#ffd07d",
+                        "tertiary-fixed-dim": "#ffb0cd",
+                        "surface-container-highest": "#e7e0ed",
+                        "on-primary-fixed": "#23005c",
+                        "error": "#ba1a1a",
+                        "on-surface-variant": "#494454"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1.5rem",
+                        "3xl": "2rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "24px",
+                        "margin-desktop": "64px",
+                        "unit": "8px",
+                        "container-max": "1280px",
+                        "stack-lg": "80px",
+                        "gutter": "32px",
+                        "stack-sm": "24px",
+                        "stack-md": "48px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "display-lg": ["Playfair Display"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Playfair Display"],
+                        "body-xl": ["Inter"],
+                        "display-md": ["Playfair Display"],
+                        "headline-lg-mobile": ["Playfair Display"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                        "display-lg": ["80px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-lg": ["40px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "body-xl": ["20px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "display-md": ["56px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .animated-bg {
+            background: linear-gradient(-45deg, #fef7ff, #f3ebf8, #e9ddff, #f8f1fe);
+            background-size: 400% 400%;
+            animation: gradientMove 15s ease infinite;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 40px 40px rgba(0, 0, 0, 0.03);
+        }
+        .layout-card {
+            transition: transform 0.15s ease-out, box-shadow 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+        .layout-card:hover {
+            box-shadow: 0 50px 80px rgba(107, 56, 212, 0.15);
+        }
+        .shimmer-border {
+            position: relative;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 3px;
+            border-radius: 2rem;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .shimmer-border::before {
+            content: '';
+            position: absolute;
+            z-index: -1;
+            left: -50%;
+            top: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent 0 340deg, #6b38d4 360deg);
+            animation: rotate 3s linear infinite;
+        }
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        .mouse-glow {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(132, 85, 239, 0.3) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            mix-blend-mode: soft-light;
+        }
+        .layout-card:hover .mouse-glow {
+            opacity: 1;
+        }
+        .masonry-grid {
+            columns: 1;
+            column-gap: 2rem;
+            transition: opacity 0.5s ease-in-out;
+        }
+        @media (min-width: 768px) { .masonry-grid { columns: 2; } }
+        @media (min-width: 1024px) { .masonry-grid { columns: 3; } }
+        @media (min-width: 1280px) { .masonry-grid { columns: 4; } }
+        
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+            filter: blur(5px);
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .masonry-item.revealed {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .floating-preview-item {
+            animation: float 4s ease-in-out infinite;
+        }
+        .floating-preview-item:nth-child(2) { animation-delay: 0.5s; }
+        .floating-preview-item:nth-child(3) { animation-delay: 1s; }
+        .floating-preview-item:nth-child(4) { animation-delay: 1.5s; }
+
+        .modal-enter { opacity: 0; transform: scale(0.95) translateY(20px); pointer-events: none; }
+        .modal-active { opacity: 1; transform: scale(1) translateY(0); pointer-events: auto; }
+        
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container overflow-x-hidden">
+<div class="animated-bg"></div>
+<div class="noise-overlay"></div>
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-sm">
+<nav class="flex justify-between items-center px-margin-desktop py-6 max-w-container-max mx-auto">
+<div class="font-display-md text-[32px] tracking-tighter text-primary">LUMINA AI</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-caps text-label-caps" href="#">Features</a>
+<a class="text-primary font-semibold border-b-2 border-primary font-label-caps text-label-caps" href="#">Gallery</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-caps text-label-caps" href="#">Pricing</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-caps text-label-caps" href="#">Studio</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="hidden sm:block text-on-surface-variant font-label-caps text-label-caps hover:text-primary transition-colors">Login</button>
+<button class="bg-primary text-on-primary px-6 py-2.5 rounded-full font-label-caps text-label-caps hover:scale-105 transition-transform active:scale-95">Get Started</button>
+</div>
+</nav>
+</header>
+<!-- Hero Section -->
+<section class="relative pt-40 pb-20 px-margin-desktop min-h-[60vh] flex flex-col items-center justify-center text-center overflow-hidden">
+<div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+<div class="absolute top-[-10%] left-[-5%] w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px]"></div>
+<div class="absolute bottom-[-10%] right-[-5%] w-[500px] h-[500px] bg-tertiary/10 rounded-full blur-[100px]"></div>
+</div>
+<div class="relative z-10 max-w-4xl mx-auto space-y-6">
+<h1 class="font-display-lg text-headline-lg md:text-display-lg text-on-surface" id="hero-title">Choose your Photo Layout</h1>
+<p class="font-body-xl text-body-xl text-on-surface-variant max-w-2xl mx-auto">Every memory deserves a different story.</p>
+</div>
+</section>
+<!-- Navigation & Filters -->
+<section class="sticky top-24 z-40 px-margin-desktop py-6 bg-background/50 backdrop-blur-md border-b border-outline-variant/10">
+<div class="max-w-container-max mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 w-full md:w-auto no-scrollbar filter-group">
+<button class="filter-pill px-6 py-2 rounded-full bg-primary text-on-primary font-label-caps text-label-caps whitespace-nowrap" data-filter="all">All</button>
+<button class="filter-pill px-6 py-2 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface-variant font-label-caps text-label-caps whitespace-nowrap" data-filter="classic">Classic</button>
+<button class="filter-pill px-6 py-2 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface-variant font-label-caps text-label-caps whitespace-nowrap" data-filter="wedding">Wedding</button>
+<button class="filter-pill px-6 py-2 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface-variant font-label-caps text-label-caps whitespace-nowrap" data-filter="studio">Studio</button>
+<button class="filter-pill px-6 py-2 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface-variant font-label-caps text-label-caps whitespace-nowrap" data-filter="minimal">Minimal</button>
+<button class="filter-pill px-6 py-2 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface-variant font-label-caps text-label-caps whitespace-nowrap" data-filter="magazine">Magazine</button>
+<button class="filter-pill px-6 py-2 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface-variant font-label-caps text-label-caps whitespace-nowrap" data-filter="retro">Retro</button>
+<button class="filter-pill px-6 py-2 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface-variant font-label-caps text-label-caps whitespace-nowrap" data-filter="ai-creative">AI Creative</button>
+</div>
+<div class="relative w-full md:w-64 group">
+<input class="w-full pl-12 pr-4 py-3 rounded-full bg-surface-container border-none focus:ring-2 focus:ring-primary/20 transition-all font-body-md text-on-surface" placeholder="Search layouts..." type="text"/>
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+</div>
+</div>
+</section>
+<!-- Layout Gallery (Masonry) -->
+<main class="px-margin-desktop py-stack-md max-w-container-max mx-auto">
+<div class="masonry-grid" id="gallery-grid">
+<!-- Featured Card (Editor's Choice) -->
+<div class="masonry-item" data-category="magazine ai-creative">
+<div class="shimmer-border">
+<div class="layout-card glass-card rounded-3xl p-6 cursor-pointer relative overflow-hidden group" onclick="openPreview('Magazine Deluxe')">
+<div class="aspect-[3/4] rounded-2xl overflow-hidden mb-6">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="A premium high-fashion photography layout" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAPuP4m8qqPphcvsslkBpd9oPWgvbBKaQdM7qBMBmfhFdKwWSmEvM4g82qD8uDUTAw2A8xpUUsCQ07XgUU1lMP6WgGLGdi_PSCLodNoVj4t4o59lHAF4YQClkzIkQX-Kolg63LyTKL2y7K0pw7xPFsJ_zpqBFwabSbTtH9netNK3ZLDnxIpW-eHhWyk3QMO1ZFDM5NCbKv5oV8p6fG2hCY0FYBOc5e4Usyx-WfS14c61Nz8JfzCAOODDsvPN_K9PC3l9jpa49fQkQ"/>
+</div>
+<div class="absolute top-8 right-8 bg-primary text-white text-[10px] px-3 py-1 rounded-full font-bold tracking-widest uppercase shadow-lg z-10">Editor's Choice</div>
+<h3 class="font-headline-lg text-[24px] mb-2">Magazine Deluxe</h3>
+<p class="text-on-surface-variant font-label-caps text-label-caps">4 Photos • Portrait</p>
+<div class="mouse-glow"></div>
+</div>
+</div>
+</div>
+<!-- Standard Cards -->
+<div class="masonry-item" data-category="minimal classic">
+<div class="layout-card glass-card rounded-3xl p-5 cursor-pointer relative overflow-hidden group" onclick="openPreview('Minimal Classic')">
+<div class="aspect-square rounded-2xl overflow-hidden mb-4 bg-surface-container">
+<div class="w-full h-full opacity-60 flex items-center justify-center">
+<span class="material-symbols-outlined text-[64px] text-primary/30">crop_square</span>
+</div>
+</div>
+<h3 class="font-headline-lg text-[20px] mb-1">Minimal Classic</h3>
+<p class="text-on-surface-variant font-label-caps text-[10px]">1 Photo • Square</p>
+<div class="mouse-glow"></div>
+</div>
+</div>
+<div class="masonry-item" data-category="retro studio">
+<div class="layout-card glass-card rounded-3xl p-5 cursor-pointer relative overflow-hidden group" onclick="openPreview('Retro Film')">
+<div class="aspect-[2/3] rounded-2xl overflow-hidden mb-4 relative bg-surface-dim">
+<div class="absolute inset-0 bg-black/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-[64px] text-white/50">movie</span>
+</div>
+</div>
+<h3 class="font-headline-lg text-[20px] mb-1">Retro Film</h3>
+<p class="text-on-surface-variant font-label-caps text-[10px]">3 Photos • Filmstrip</p>
+<div class="mouse-glow"></div>
+</div>
+</div>
+<div class="masonry-item" data-category="wedding minimal">
+<div class="layout-card glass-card rounded-3xl p-5 cursor-pointer relative overflow-hidden group" onclick="openPreview('Parisian Night')">
+<div class="aspect-video rounded-2xl overflow-hidden mb-4 bg-surface-container-high">
+<div class="w-full h-full flex items-center justify-center">
+<span class="material-symbols-outlined text-[64px] text-tertiary/20">auto_awesome</span>
+</div>
+</div>
+<h3 class="font-headline-lg text-[20px] mb-1">Parisian Night</h3>
+<p class="text-on-surface-variant font-label-caps text-[10px]">2 Photos • Landscape</p>
+<div class="mouse-glow"></div>
+</div>
+</div>
+<div class="masonry-item" data-category="ai-creative studio">
+<div class="layout-card glass-card rounded-3xl p-5 cursor-pointer relative overflow-hidden group" onclick="openPreview('Cyberpunk Bloom')">
+<div class="aspect-square rounded-2xl overflow-hidden mb-4 bg-surface-container">
+<div class="w-full h-full flex items-center justify-center">
+<span class="material-symbols-outlined text-[64px] text-primary-fixed-dim">blur_on</span>
+</div>
+</div>
+<h3 class="font-headline-lg text-[20px] mb-1">Cyberpunk Bloom</h3>
+<p class="text-on-surface-variant font-label-caps text-[10px]">4 Photos • Grid</p>
+<div class="mouse-glow"></div>
+</div>
+</div>
+<div class="masonry-item" data-category="classic studio">
+<div class="layout-card glass-card rounded-3xl p-5 cursor-pointer relative overflow-hidden group" onclick="openPreview('Renaissance')">
+<div class="aspect-[4/5] rounded-2xl overflow-hidden mb-4 bg-surface-dim">
+<div class="w-full h-full flex items-center justify-center">
+<span class="material-symbols-outlined text-[64px] text-secondary/30">palette</span>
+</div>
+</div>
+<h3 class="font-headline-lg text-[20px] mb-1">Renaissance</h3>
+<p class="text-on-surface-variant font-label-caps text-[10px]">1 Photo • Vertical</p>
+<div class="mouse-glow"></div>
+</div>
+</div>
+</div>
+</main>
+<!-- CTA Section -->
+<section class="py-stack-lg px-margin-desktop bg-surface-container-lowest/50 backdrop-blur-md border-t border-outline-variant/30">
+<div class="max-w-4xl mx-auto text-center space-y-8">
+<div class="inline-block px-4 py-1.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label-caps text-label-caps mb-4">AI ASSISTANT</div>
+<h2 class="font-headline-lg text-headline-lg md:text-display-md text-on-surface">Can't decide? Let AI recommend the perfect layout.</h2>
+<button class="bg-gradient-to-r from-primary to-tertiary text-on-primary px-10 py-5 rounded-full font-body-xl text-body-xl font-semibold shadow-2xl hover:scale-105 active:scale-95 transition-transform">
+                Recommend Layout
+            </button>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest py-stack-lg border-t border-outline-variant/30">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop max-w-container-max mx-auto">
+<div class="col-span-1 md:col-span-1">
+<div class="font-display-md text-[32px] text-primary mb-6">LUMINA AI</div>
+<p class="text-on-surface-variant font-body-md mb-4">© 2024 LUMINA AI PHOTOBOOTH. TECHNOLOGY AS ART.</p>
+</div>
+<div class="space-y-4">
+<p class="font-label-caps text-label-caps text-on-surface">Company</p>
+<a class="block text-on-surface-variant hover:translate-x-1 transition-transform" href="#">Privacy Policy</a>
+<a class="block text-on-surface-variant hover:translate-x-1 transition-transform" href="#">Terms of Service</a>
+</div>
+<div class="space-y-4">
+<p class="font-label-caps text-label-caps text-on-surface">Experience</p>
+<a class="block text-on-surface-variant hover:translate-x-1 transition-transform" href="#">Studio Partners</a>
+<a class="block text-on-surface-variant hover:translate-x-1 transition-transform" href="#">Press Kit</a>
+</div>
+<div class="space-y-4">
+<p class="font-label-caps text-label-caps text-on-surface">Connect</p>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-primary cursor-pointer hover:scale-110 transition-transform">public</span>
+<span class="material-symbols-outlined text-primary cursor-pointer hover:scale-110 transition-transform">alternate_email</span>
+<span class="material-symbols-outlined text-primary cursor-pointer hover:scale-110 transition-transform">share</span>
+</div>
+</div>
+</div>
+</footer>
+<!-- Quick Preview Modal -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center p-6 opacity-0 pointer-events-none transition-all duration-500" id="preview-modal">
+<div class="absolute inset-0 bg-on-surface/40 backdrop-blur-sm" onclick="closePreview()"></div>
+<div class="relative glass-card w-full max-w-5xl rounded-[32px] overflow-hidden shadow-[0_80px_120px_rgba(0,0,0,0.25)] modal-enter transition-all duration-500 flex flex-col md:flex-row h-[80vh] md:h-auto">
+<div class="md:w-3/5 bg-surface-container relative overflow-hidden p-12 flex items-center justify-center">
+<!-- Interactive Preview Frame -->
+<div class="relative w-full aspect-[4/3] bg-white rounded-xl shadow-2xl p-4 grid grid-cols-2 gap-4">
+<div class="bg-surface-variant rounded-lg flex items-center justify-center relative overflow-hidden floating-preview-item">
+<span class="material-symbols-outlined text-[48px] text-primary/20">face</span>
+<div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+</div>
+<div class="bg-surface-variant rounded-lg flex items-center justify-center relative overflow-hidden floating-preview-item">
+<span class="material-symbols-outlined text-[48px] text-primary/20">face_2</span>
+</div>
+<div class="bg-surface-variant rounded-lg flex items-center justify-center relative overflow-hidden floating-preview-item">
+<span class="material-symbols-outlined text-[48px] text-primary/20">face_3</span>
+</div>
+<div class="bg-surface-variant rounded-lg flex items-center justify-center relative overflow-hidden floating-preview-item">
+<span class="material-symbols-outlined text-[48px] text-primary/20">face_4</span>
+</div>
+</div>
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-tertiary/5 pointer-events-none"></div>
+</div>
+<div class="md:w-2/5 p-8 md:p-12 flex flex-col justify-between bg-surface-container-lowest">
+<div>
+<div class="flex justify-between items-start mb-8">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2" id="modal-title">Magazine Deluxe</h2>
+<p class="text-primary font-label-caps text-label-caps">PRO LAYOUT</p>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors" onclick="closePreview()">
+<span class="material-symbols-outlined text-[32px]">close</span>
+</button>
+</div>
+<div class="space-y-6 mb-12">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">aspect_ratio</span>
+<p class="font-body-md text-on-surface-variant">Recommended for Portrait subjects</p>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">auto_fix_high</span>
+<p class="font-body-md text-on-surface-variant">AI background enhancement active</p>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">print</span>
+<p class="font-body-md text-on-surface-variant">Optimal for 4x6" printing</p>
+</div>
+</div>
+</div>
+<div class="space-y-4">
+<button class="w-full bg-primary text-on-primary py-4 rounded-full font-bold hover:scale-[1.02] active:scale-[0.98] transition-transform">Select This Layout</button>
+<button class="w-full border border-outline-variant py-4 rounded-full font-bold text-on-surface-variant hover:bg-surface-container transition-colors">Compare Others</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+    // 1. 3D Tilt & Glow Effect
+    const cards = document.querySelectorAll('.layout-card');
+    cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = ((y - centerY) / centerY) * -12;
+            const rotateY = ((x - centerX) / centerX) * 12;
+            
+            card.style.transform = `scale(1.04) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            card.style.setProperty('--mouse-x', `${(x / rect.width) * 100}%`);
+            card.style.setProperty('--mouse-y', `${(y / rect.height) * 100}%`);
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = `scale(1) rotateX(0deg) rotateY(0deg)`;
+        });
+    });
+
+    // 2. Entrance Animations (Intersection Observer)
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                // Add staggered delay based on appearance order if needed, but the class handles base transition
+                setTimeout(() => {
+                    entry.target.classList.add('revealed');
+                }, index * 50); 
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.masonry-item').forEach(item => {
+        observer.observe(item);
+    });
+
+    // 3. Category Filtering
+    const filterPills = document.querySelectorAll('.filter-pill');
+    const galleryItems = document.querySelectorAll('.masonry-item');
+    const galleryGrid = document.getElementById('gallery-grid');
+
+    filterPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+            const filter = pill.getAttribute('data-filter');
+            
+            // Update UI
+            filterPills.forEach(p => {
+                p.classList.remove('bg-primary', 'text-on-primary');
+                p.classList.add('bg-surface-container', 'text-on-surface-variant');
+            });
+            pill.classList.add('bg-primary', 'text-on-primary');
+            pill.classList.remove('bg-surface-container', 'text-on-surface-variant');
+
+            // Animate items out
+            gsap.to(galleryItems, {
+                opacity: 0,
+                scale: 0.9,
+                y: 20,
+                duration: 0.3,
+                stagger: 0.02,
+                onComplete: () => {
+                    galleryItems.forEach(item => {
+                        const categories = item.getAttribute('data-category') || '';
+                        if (filter === 'all' || categories.includes(filter)) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+
+                    // Animate back in
+                    gsap.to(galleryItems, {
+                        opacity: 1,
+                        scale: 1,
+                        y: 0,
+                        duration: 0.5,
+                        stagger: 0.05,
+                        ease: "back.out(1.2)"
+                    });
+                }
+            });
+        });
+    });
+
+    // 4. Modal Logic
+    const modal = document.getElementById('preview-modal');
+    const modalContent = modal.querySelector('.glass-card');
+    const modalTitle = document.getElementById('modal-title');
+
+    function openPreview(title) {
+        modalTitle.innerText = title;
+        modal.classList.remove('pointer-events-none');
+        modal.style.opacity = '1';
+        modalContent.classList.remove('modal-enter');
+        modalContent.classList.add('modal-active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closePreview() {
+        modal.style.opacity = '0';
+        modal.classList.add('pointer-events-none');
+        modalContent.classList.remove('modal-active');
+        modalContent.classList.add('modal-enter');
+        document.body.style.overflow = '';
+    }
+
+    // Hero title entrance
+    window.addEventListener('DOMContentLoaded', () => {
+        gsap.from("#hero-title", {
+            duration: 1.5,
+            y: 80,
+            opacity: 0,
+            ease: "power4.out",
+            delay: 0.2
+        });
+    });
+</script>
+</body></html>

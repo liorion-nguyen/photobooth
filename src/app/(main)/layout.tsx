@@ -14,7 +14,7 @@ export default function MainLayout({
       {/* <WeatherAnimation /> */}
       <div className="relative z-10 bg-transparent">
         <Header />
-        <main className="flex-1 bg-transparent">{children}</main>
+        <main className="flex-1 bg-transparent pt-[88px]">{children}</main>
         <Footer />
       </div>
       <WeatherNotification />

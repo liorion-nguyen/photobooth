@@ -11,6 +11,7 @@ interface CameraViewProps {
   mirror?: boolean;
   onRestartCamera?: () => void;
   filter?: FilterType;
+  className?: string;
 }
 
 export default function CameraView({
@@ -19,6 +20,7 @@ export default function CameraView({
   mirror = false,
   onRestartCamera,
   filter = "none",
+  className = "",
 }: CameraViewProps) {
   const [videoReady, setVideoReady] = useState(false);
   const videoReadyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -123,7 +125,7 @@ export default function CameraView({
   }, [videoRef, isStreaming]);
 
   return (
-    <div className="relative w-full h-full bg-black rounded-lg overflow-hidden">
+    <div className={`relative w-full h-full bg-black rounded-lg overflow-hidden ${className}`}>
       <video
         ref={videoRef}
         autoPlay

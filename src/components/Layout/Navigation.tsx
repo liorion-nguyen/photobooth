@@ -2,60 +2,53 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
 
-interface NavItem {
-  label: string;
-  href: string;
-  icon?: string;
+export const MAIN_NAV_ITEMS = [
+  { label: "Về chúng tôi", href: "/about" },
+  { label: "Quản lý khung", href: "/frames" },
+  { label: "Chụp ảnh", href: "/photobooth" },
+] as const;
+
+interface NavigationProps {
+  onNavigate?: () => void;
+  className?: string;
+  mobile?: boolean;
 }
 
-const navItems: NavItem[] = [
-  { label: "Trang chủ", href: "/" },
-  { label: "Về chúng tôi", href: "/about" },
-  { label: "Khung ảnh", href: "/frames" },
-  { label: "Photobooth", href: "/photobooth" },
-];
-
-export default function Navigation() {
+export default function Navigation({ onNavigate, className = "", mobile = false }: NavigationProps) {
   const pathname = usePathname();
 
   return (
-    <nav className="flex items-center space-x-1">
-      {navItems.map((item) => {
-        const isActive = pathname === item.href;
-        return (
-          <Link key={item.href} href={item.href}>
-            <motion.div
-              className={`px-4 py-2 rounded-lg transition-all relative ${
-                isActive
-                  ? "text-purple-600 font-semibold"
-                  : "text-gray-600 hover:text-gray-900 font-medium"
-              }`}
-              whileHover={{ y: -1 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <span className="relative z-10">{item.label}</span>
-              {isActive && (
-                <motion.div
-                  className="absolute inset-0 bg-purple-50 rounded-lg -z-0"
-                  layoutId="activeTab"
-                  initial={false}
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                />
-              )}
-              {isActive && (
-                <motion.div
-                  className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
-                  layoutId="activeIndicator"
-                  initial={false}
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                />
-              )}
-            </motion.div>
-          </Link>
-        );
-      })}
+    <nav className={className}>
+      <ul className={mobile ? "space-y-1" : "flex items-center gap-10"}>
+        {MAIN_NAV_ITEMS.map((item) => {
+          const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+
+          return (
+            <li key={item.href}>
+              <Link
+                href={item.href}
+                onClick={onNavigate}
+                className={
+                  mobile
+                    ? `block px-4 py-3 rounded-lg font-medium transition-colors ${
+                        isActive
+                          ? "text-primary bg-surface-container"
+                          : "text-on-surface-variant hover:bg-surface-container hover:text-primary"
+                      }`
+                    : `font-body text-label-caps uppercase transition-colors ${
+                        isActive
+                          ? "text-primary font-bold border-b-2 border-primary pb-0.5"
+                          : "text-on-surface-variant hover:text-primary"
+                      }`
+                }
+              >
+                {item.label}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
     </nav>
   );
 }

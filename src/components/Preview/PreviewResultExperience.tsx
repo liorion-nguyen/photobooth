@@ -18,7 +18,7 @@ import {
   Sun,
   Wand2,
 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type PreviewMode = "single" | "layout";
 
@@ -89,46 +89,10 @@ const ACCENT_STYLES = {
   },
 };
 
-function PhotoStrip3D({ children }: { children: React.ReactNode }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const stripRef = useRef<HTMLDivElement>(null);
-
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    const container = containerRef.current;
-    const strip = stripRef.current;
-    if (!container || !strip) return;
-
-    const rect = container.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = (y - centerY) / 25;
-    const rotateY = (centerX - x) / 25;
-
-    strip.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    const strip = stripRef.current;
-    if (!strip) return;
-    strip.style.transform = "rotateY(-8deg) rotateX(2deg) rotateZ(-1deg)";
-  }, []);
-
+function PreviewDisplay({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      ref={containerRef}
-      className="perspective-container flex justify-center lg:justify-start w-full"
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-    >
-      <div
-        ref={stripRef}
-        className="photo-strip-3d relative w-full max-w-[420px] preview-glass-panel p-4 shadow-2xl"
-      >
-        <div className="bg-white p-4 shadow-inner rounded-2xl">{children}</div>
-        <div className="absolute inset-0 rounded-[32px] pointer-events-none preview-glass-inner-border" />
-      </div>
+    <div className="w-full flex flex-col items-center lg:items-start">
+      <div className="w-full max-w-lg lg:max-w-none flex justify-center">{children}</div>
     </div>
   );
 }
@@ -168,13 +132,10 @@ function SinglePreviewImage({
   }
 
   return (
-    <motion.img
+    <img
       src={displayUrl}
       alt="Ảnh chụp"
-      className="w-full h-auto aspect-[3/4] object-cover rounded-sm"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.35 }}
+      className="w-full h-auto max-h-[min(80vh,720px)] object-contain"
     />
   );
 }
@@ -246,45 +207,38 @@ export default function PreviewResultExperience({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-gutter items-start">
           {/* Preview left */}
           <div className="lg:col-span-7">
-            <PhotoStrip3D>
+            <PreviewDisplay>
               {mode === "single" && imageUrl ? (
                 <>
                   <SinglePreviewImage imageUrl={imageUrl} filter={selectedFilter} />
-                  <div className="mt-4 flex justify-between items-center px-2">
-                    <span className="font-body text-label-caps text-on-surface-variant tracking-[0.2em] uppercase">
+                  <div className="mt-4 w-full max-w-lg flex justify-between items-center px-1">
+                    <span className="font-body text-label-caps text-on-surface-variant tracking-[0.2em] uppercase text-xs">
                       {sessionLabel}
                     </span>
-                    <span className="font-body text-label-caps text-on-surface-variant opacity-40">
+                    <span className="font-body text-label-caps text-on-surface-variant opacity-40 text-xs">
                       {year}
                     </span>
                   </div>
                 </>
               ) : mode === "layout" && layoutState ? (
                 <>
-                  <div
-                    className={onSlotClick ? "cursor-pointer" : ""}
-                    onClick={() => onSlotClick?.(0)}
-                  >
-                    <FramedLayoutPreview
-                      layoutState={layoutState}
-                      frameType={selectedFrame}
-                      onSlotClick={onSlotClick}
-                    />
-                  </div>
-                  <div className="mt-4 flex justify-between items-center px-2">
-                    <span className="font-body text-label-caps text-on-surface-variant tracking-[0.2em] uppercase">
+                  <FramedLayoutPreview
+                    layoutState={layoutState}
+                    frameType={selectedFrame}
+                    onSlotClick={onSlotClick}
+                    plain
+                  />
+                  <div className="mt-4 w-full max-w-lg flex justify-between items-center px-1">
+                    <span className="font-body text-label-caps text-on-surface-variant tracking-[0.2em] uppercase text-xs">
                       {layoutState.config.name} · {sessionLabel}
                     </span>
-                    <span className="font-body text-label-caps text-on-surface-variant opacity-40">
+                    <span className="font-body text-label-caps text-on-surface-variant opacity-40 text-xs">
                       {year}
                     </span>
                   </div>
-                  <p className="text-xs text-on-surface-variant text-center mt-2 opacity-70">
-                    Nhấn vào ảnh để chụp lại từng ô
-                  </p>
                 </>
               ) : null}
-            </PhotoStrip3D>
+            </PreviewDisplay>
           </div>
 
           {/* Controls right */}

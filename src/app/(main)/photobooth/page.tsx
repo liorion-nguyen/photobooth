@@ -3,12 +3,12 @@
 import CameraStudioExperience from "@/components/Camera/CameraStudioExperience";
 import type { FrameType } from "@/components/Frames/FrameSelector";
 import LayoutSelector from "@/components/Layouts/LayoutSelector";
-import Logo from "@/components/Logo";
 import PreviewResultExperience from "@/components/Preview/PreviewResultExperience";
 import ShareModal from "@/components/Share/ShareModal";
 import Button from "@/components/UI/Button";
 import Modal from "@/components/UI/Modal";
 import { useAuth } from "@/contexts/AuthContext";
+import { useImmersiveMode } from "@/contexts/ImmersiveModeContext";
 import { useCamera } from "@/hooks/useCamera";
 import { useCapture } from "@/hooks/useCapture";
 import { useLayout } from "@/hooks/useLayout";
@@ -34,6 +34,7 @@ type CaptureSettings = {
 
 export default function PhotoboothPage() {
   const { user } = useAuth();
+  const { setImmersive } = useImmersiveMode();
   const [photoMode, setPhotoMode] = useState<PhotoMode | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("layout-select");
   const [capturedImage, setCapturedImage] = useState<CaptureResult | null>(null);
@@ -358,7 +359,12 @@ export default function PhotoboothPage() {
     // stopCamera();
   }, [layoutState, capturedImage, resetLayout]);
 
-  // Check browser support và tự động bật camera khi mount
+  // Ẩn header/footer — chế độ studio full màn hình khi chụp ảnh
+  useEffect(() => {
+    setImmersive(viewMode === "camera");
+    return () => setImmersive(false);
+  }, [viewMode, setImmersive]);
+
   useEffect(() => {
     if (typeof navigator !== "undefined") {
       const hasGetUserMedia = !!(
@@ -519,12 +525,18 @@ export default function PhotoboothPage() {
         )}
       </AnimatePresence>
 
-      <div className="max-w-container-max mx-auto px-2 sm:px-4 min-h-[calc(100vh-88px)] flex flex-col">
-        <div className="flex justify-center py-3 sm:py-4 flex-shrink-0">
-          <Link href="/" className="flex items-center gap-2 sm:gap-3">
-            <Logo size={36} className="sm:!w-10 sm:!h-10" showText={true} animated={false} />
-          </Link>
-        </div>
+      <div
+        className={`mx-auto min-h-[calc(100vh-88px)] flex flex-col ${
+          viewMode === "camera" ? "" : "max-w-container-max px-2 sm:px-4"
+        }`}
+      >
+        {/* {viewMode !== "camera" && (
+          <div className="flex justify-center py-3 sm:py-4 flex-shrink-0">
+            <Link href="/" className="flex items-center gap-2 sm:gap-3">
+              <Logo size={36} className="sm:!w-10 sm:!h-10" showText={true} animated={false} />
+            </Link>
+          </div>
+        )} */}
 
         <div className="flex-1 flex flex-col min-h-0">
           <AnimatePresence mode="wait">
@@ -589,12 +601,7 @@ export default function PhotoboothPage() {
             </div>
 
             {viewMode === "preview" && capturedImage && (
-              <motion.div
-                key="preview"
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -16 }}
-              >
+              <div key="preview">
                 <PreviewResultExperience
                   mode="single"
                   imageUrl={capturedImage.dataUrl}
@@ -608,7 +615,7 @@ export default function PhotoboothPage() {
                   uploadedPhotoId={uploadedPhotoId}
                   isSaving={!!uploadProgress && uploadProgress.percentage < 100}
                 />
-              </motion.div>
+              </div>
             )}
 
             {uploadedPhotoId && (
@@ -620,12 +627,7 @@ export default function PhotoboothPage() {
             )}
 
             {viewMode === "layout-preview" && layoutState && layoutState.isComplete && (
-              <motion.div
-                key="layout-preview"
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -16 }}
-              >
+              <div key="layout-preview">
                 <PreviewResultExperience
                   mode="layout"
                   layoutState={layoutState}
@@ -640,7 +642,7 @@ export default function PhotoboothPage() {
                   uploadedPhotoId={uploadedPhotoId}
                   isSaving={!!uploadProgress && uploadProgress.percentage < 100}
                 />
-              </motion.div>
+              </div>
             )}
 
             {viewMode === "error" && (

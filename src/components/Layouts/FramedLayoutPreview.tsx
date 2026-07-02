@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import type { LayoutState } from "@/types/layout";
 import type { FrameType } from "@/components/Frames/FrameSelector";
 import { exportLayoutAsImage } from "@/utils/layoutCanvas";
@@ -10,12 +9,15 @@ interface FramedLayoutPreviewProps {
   layoutState: LayoutState;
   frameType: FrameType;
   onSlotClick?: (slotIndex: number) => void;
+  /** Hiển thị phẳng, không animation — dùng màn xem kết quả */
+  plain?: boolean;
 }
 
 export default function FramedLayoutPreview({
   layoutState,
   frameType,
   onSlotClick,
+  plain = false,
 }: FramedLayoutPreviewProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -23,6 +25,7 @@ export default function FramedLayoutPreview({
 
   useEffect(() => {
     let isMounted = true;
+    let objectUrl: string | null = null;
     setPreviewError(null);
 
     const generatePreview = async () => {
@@ -34,10 +37,10 @@ export default function FramedLayoutPreview({
       try {
         setIsLoading(true);
         const blob = await exportLayoutAsImage(layoutState, frameType);
-        const url = URL.createObjectURL(blob);
-        
+        objectUrl = URL.createObjectURL(blob);
+
         if (isMounted) {
-          setPreviewUrl(url);
+          setPreviewUrl(objectUrl);
           setPreviewError(null);
           setIsLoading(false);
         }
@@ -46,7 +49,9 @@ export default function FramedLayoutPreview({
         if (isMounted) {
           setPreviewUrl(null);
           setPreviewError(
-            error instanceof Error ? error.message : "Không thể áp dụng khung. Thử khung khác hoặc ảnh từ nguồn hỗ trợ CORS."
+            error instanceof Error
+              ? error.message
+              : "Không thể áp dụng khung. Thử khung khác hoặc ảnh từ nguồn hỗ trợ CORS."
           );
           setIsLoading(false);
         }
@@ -57,26 +62,30 @@ export default function FramedLayoutPreview({
 
     return () => {
       isMounted = false;
-      if (previewUrl) {
-        URL.revokeObjectURL(previewUrl);
+      if (objectUrl) {
+        URL.revokeObjectURL(objectUrl);
       }
     };
   }, [layoutState, frameType]);
 
+  const loadingBoxClass = plain
+    ? "w-full min-h-[200px] flex items-center justify-center"
+    : "w-full aspect-square bg-gray-100 rounded-lg flex items-center justify-center";
+
   if (!layoutState.isComplete) {
     return (
-      <div className="w-full aspect-square bg-gray-100 rounded-lg flex items-center justify-center">
-        <p className="text-gray-500">Chưa hoàn thành layout</p>
+      <div className={loadingBoxClass}>
+        <p className="text-on-surface-variant text-sm">Chưa hoàn thành layout</p>
       </div>
     );
   }
 
   if (isLoading) {
     return (
-      <div className="w-full aspect-square bg-gray-100 rounded-lg flex items-center justify-center">
+      <div className={loadingBoxClass}>
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Đang tạo preview với khung...</p>
+          <div className="w-10 h-10 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+          <p className="text-sm text-on-surface-variant">Đang tạo preview với khung...</p>
         </div>
       </div>
     );
@@ -84,38 +93,44 @@ export default function FramedLayoutPreview({
 
   if (previewError || !previewUrl) {
     return (
-      <div className="w-full aspect-square bg-gray-100 rounded-lg flex flex-col items-center justify-center p-4 text-center">
-        <p className="text-red-600 text-sm font-medium mb-1">Không thể áp dụng khung</p>
-        <p className="text-gray-500 text-xs max-w-xs">
+      <div className={`${loadingBoxClass} flex-col p-4 text-center`}>
+        <p className="text-error text-sm font-medium mb-1">Không thể áp dụng khung</p>
+        <p className="text-on-surface-variant text-xs max-w-xs">
           {previewError ?? "Không thể tạo preview. Thử chọn khung khác."}
         </p>
       </div>
     );
   }
 
-  const is1x4 = layoutState.config.type === "1x4";
-  const wrapperClass = is1x4 ? "max-w-xl" : "max-w-md";
-  const imgClass = is1x4
+  const imgClass = plain
+    ? "w-full h-auto max-h-[min(80vh,900px)] object-contain"
+    : layoutState.config.type === "1x4"
     ? "w-full h-auto max-h-[min(32rem,70vh)] object-contain rounded-lg shadow-lg"
     : "w-full h-auto max-h-96 object-contain rounded-lg shadow-lg";
+
+  const wrapperClass = plain
+    ? "w-full max-w-md lg:max-w-xl mx-auto"
+    : layoutState.config.type === "1x4"
+    ? "max-w-xl"
+    : "max-w-md";
+
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      className="w-full flex justify-center"
-    >
+    <div className="w-full flex justify-center">
       <div
-        className={`relative rounded-lg overflow-hidden ${wrapperClass} mx-auto ${
+        className={`relative overflow-hidden ${wrapperClass} mx-auto ${
           onSlotClick ? "cursor-pointer" : ""
         }`}
         onClick={() => onSlotClick?.(0)}
+        onKeyDown={(e) => {
+          if (onSlotClick && (e.key === "Enter" || e.key === " ")) {
+            onSlotClick(0);
+          }
+        }}
+        role={onSlotClick ? "button" : undefined}
+        tabIndex={onSlotClick ? 0 : undefined}
       >
-        <img
-          src={previewUrl}
-          alt="Framed layout preview"
-          className={imgClass}
-        />
+        <img src={previewUrl} alt="Ảnh photobooth với khung" className={imgClass} />
       </div>
-    </motion.div>
+    </div>
   );
 }

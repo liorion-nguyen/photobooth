@@ -1,23 +1,9 @@
-import Header from "@/components/Layout/Header";
-import Footer from "@/components/Layout/Footer";
-// import WeatherAnimation from "@/components/Weather/WeatherAnimation"; // Disabled to improve performance on mobile devices
-import WeatherNotification from "@/components/Weather/WeatherNotification";
+import MainLayoutClient from "@/components/Layout/MainLayoutClient";
 
 export default function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="min-h-screen flex flex-col relative">
-      {/* WeatherAnimation disabled to prevent lag on mobile devices */}
-      {/* <WeatherAnimation /> */}
-      <div className="relative z-10 bg-transparent">
-        <Header />
-        <main className="flex-1 bg-transparent pt-[88px]">{children}</main>
-        <Footer />
-      </div>
-      <WeatherNotification />
-    </div>
-  );
+  return <MainLayoutClient>{children}</MainLayoutClient>;
 }
